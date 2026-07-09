@@ -30,7 +30,7 @@ The practical consequence: every "retention %" in the structured-compression lit
 
 ## 2. The compression recipe and its (surface) frontier
 
-On the **surface basket**, the compression frontier is convex and reproducible (±0.1), and **the simplest operator wins**. A 16+-lever search (§7) found nothing that beats plain keep-full at matched parameters.
+On the **surface basket**, the compression frontier is convex and reproducible (±0.1), and **the simplest operator wins**. A ~70-lever search (§7, Appendix B) found nothing that beats plain keep-full at matched parameters.
 
 | point | params | compression | surface retention |
 |---|---|---|---|
@@ -177,7 +177,7 @@ At ~30% compression, does *allocating* the cut differently save reasoning?
 
 ## 7. The negative map (what does *not* help)
 
-A large operator and distillation search — ~90 experiment queues — converged on a small set of "laws" and a long list of dead ends. **Every lever below was ≤ the plain keep-full frontier**, or null on the capability crater:
+A large operator and distillation search — **~70 distinct levers across 82 experiment queues** (the full grounded catalog is in **Appendix B**, backed by the summaries in `results/`) — converged on a small set of "laws" and a long list of dead ends. **Every lever below was ≤ the plain keep-full frontier**, or null on the capability crater:
 
 - **Reshape / capture (all fail):** whitened/output-aware SVD, hybrid-capture, ghost-capture, orthogonal add-channels (Schur), CUR, SliceGPT rotation, closed-form fold/absorption, EoRA.
 - **Structural (all fail):** layer-merge (LaCo), layer-tie (MobileLLM weight sharing), full-width bus (per-layer read/write index sets — routing incoherence), FFN→depth reallocation (Net2DeeperNet + lstsq), embedding factorization, canon conv-mixers (net-new token mixing).
@@ -187,15 +187,30 @@ The consolidated design principles ("three-clause law"): (1) don't modify pretra
 
 ---
 
-## 8. Implications
+## 8. Scale and compressibility — and what it does *not* tell us about reasoning
 
-1. **Report capability-stratified evals.** A structured-compression result without gsm8k/MMLU is uninterpretable — the aggregate hides whether reasoning survived. This reframes existing "retention %" numbers as surface-task numbers.
-2. **Reasoning-preserving cheap compression at 1.5B is ~4–8% max**, by any shape. Below that, math is gone and no cheap operator or heal brings it back.
-3. **The path to reasoning-preserving compression is source scale, not a better operator.** Native-1.5B (width 1536, 28L) reasons fine; a *bigger* source (3B: width 2048, 36L) compressed toward 1.5B lands at an absolute width/depth the 1.5B budget proves is reasoning-capable — *if* the threshold is absolute rather than relative. This is the **H100 3B→1.5B hypothesis** (`scripts/h100_bigteach_3b15b.sh`, keep depth + width above threshold, hard-basket evals from the start). It is the one experiment that could move the top line.
+Two earlier scaling sweeps (GPT-2 and Pythia families; details and mechanism in the companion [`prior_work_co_compression.md`](prior_work_co_compression.md)) bracket how compressibility moves with model size:
+
+| family / metric | scale range | compression | retained | trend |
+|---|---|---|---|---|
+| GPT-2 · WikiText ppl | 124M → 355M → 774M | ~28% | 48.0 → 50.5 → **58.4** | rises with scale |
+| Pythia · surface downstream | 1.4B → 2.8B → 6.9B | ~20% | 86.1 → 86.3 → **86.6** | flat (saturated) |
+
+Compressibility **rises with size at small scale and then saturates** — the redundancy plateau bigger models are supposed to provide is largely already reached by the low billions (pythia is flat from 1.4B to 6.9B). **Every figure here is a surface / perplexity metric; gsm8k was never evaluated at scale in these sweeps** (the native Qwen references are surface-only: 1.5B 68.1, 3B 72.0, 7B 76.2 avg).
+
+So the scaling evidence is a **caution, not a promise**, for the source-scale hypothesis below: a bigger source does not obviously buy *surface* retention headroom past ~1.5B — surface has already saturated. The live bet is that **reasoning behaves differently** — that the larger source's redundancy, which surface no longer needs, is exactly what a reasoning-preserving compression could draw on. Nothing in the surface scaling law confirms or refutes this; it is precisely the gap a capability-stratified 3B→1.5B run would fill.
 
 ---
 
-## 9. Limitations
+## 9. Implications
+
+1. **Report capability-stratified evals.** A structured-compression result without gsm8k/MMLU is uninterpretable — the aggregate hides whether reasoning survived. This reframes existing "retention %" numbers as surface-task numbers.
+2. **Reasoning-preserving cheap compression at 1.5B is ~4–8% max**, by any shape. Below that, math is gone and no cheap operator or heal brings it back.
+3. **The most promising remaining lever is source scale — but it is a hypothesis, not a result.** Native-1.5B (width 1536, 28L) reasons fine, so that absolute geometry is reasoning-capable; compressing a *bigger* source (3B: width 2048, 36L) toward it *might* land above the reasoning thresholds — **if** they are absolute rather than relative, and **if** reasoning benefits from scale where surface (§8) has saturated. Neither is established. This is the **H100 3B→1.5B experiment** (`scripts/h100_bigteach_3b15b.sh`, rewritten as a compression-ratio sweep with hard-basket evals from the start): the one run that could turn the negative story into a positive one — or confirm the wall holds at scale.
+
+---
+
+## 10. Limitations
 
 - Single family (Qwen2.5) at a single scale (1.5B). Cross-family confirmation of the crater (SmolLM2/TinyLlama, hard basket) is the recommended next check to promote the finding from "Qwen fact" to "transformer fact."
 - Heal fixed at ~30M tokens by design (few/zero-shot regime). We do **not** claim reasoning is unrecoverable with large-scale retraining — only that it is unrecoverable *cheaply*, which is the regime of interest.
@@ -203,11 +218,77 @@ The consolidated design principles ("three-clause law"): (1) don't modify pretra
 
 ---
 
-## Appendix: data provenance
+## Appendix A: Data provenance
 
-All numbers trace to pulled A10 run summaries (`cloud_results/a10_final/`):
+All numbers trace to run summaries shipped in `results/`:
 `a10_wthresh_summary.txt` (§5.1), `a10_captrade_summary.txt` (§5.2, §6.4),
 `a10_forget_summary.txt` (§6.1), `a10_reshape_summary.txt` (§6.2),
 `a10_recover_summary.txt` (§6.3), `a10_hardloc_summary.txt` (§5.3),
-`a10_kverify_summary.txt` (§3), `a10_peraxis_summary.txt` / `a10_frontier2_summary.txt` (§2).
-82 summaries + 454 run logs archived locally; per-run params+shape recorded in each summary line.
+`a10_kverify_summary.txt` (§3), `a10_peraxis_summary.txt` / `a10_frontier2_summary.txt` (§2),
+the scaling sweeps in `scaling_law_gpt2_pythia.tsv` (§8), and the full set of **82 lever summaries**
+backing the negative map (§7, Appendix B). 454 raw run logs are archived with the authors; per-run
+params+shape are recorded in each summary line. The earlier co-compression study and mechanism are in
+the companion [`prior_work_co_compression.md`](prior_work_co_compression.md).
+
+---
+
+## Appendix B: The full negative map (~70 levers)
+
+Every lever we tried on Qwen2.5-1.5B, grouped, with its best result and verdict against the plain
+keep-full frontier (surface-8 teacher ≈ 68.4; frontier ≈ 79% @ 32% compression → 88.5% @ 17%).
+Capability-basket runs (different teacher/tasks) are marked **NEUTRAL** — they answer the crater
+question, not the frontier question. Each row traces to a `results/a10_<lever>_summary.txt` file.
+
+**What won.** Plain keep-full width-prune (raw activation-energy) + an adequate C4 heal is the champion — 88.5% @ ~17%, ~79–80% @ ~32%; nothing displaced it. The *only* lever to edge it was iterative-staged surgery (`iterbest`, +~1.5 at the aggressive band). Everything that merely matched it added no value (all KD-loss variants, extra heal tokens, capture bases). Everything else lost. And no lever recovered the crater — math capability craters regardless of operator, loss, data, or shape.
+
+### B.1 Reshape / capture (rotation, SVD, fold, low-rank capture, channel selection)
+
+| lever | what it tests | best | verdict |
+|---|---|---|---|
+| outraw | raw activation-energy width prune (+sink-pin) — **the baseline** | 88.5% | BASELINE (sink-pin adds nothing) |
+| capture | capture-basis variants (rrr/ortho/wanda/combine/pls) | combine 88.4% | TIED |
+| refit | extra heal tokens on capture (10M/100M) | 88.8% | TIED (just more data) |
+| combosolver | joint OSAL/SAL closed-form solver | 87.2% | LOST |
+| eorapush / svdcap | push EoRA / SVD-basis capture rank | 85.4 / 81.1% | LOST |
+| head / head2 | GQA query-head prune (wanda>energy>norm criterion) | 87.0% | LOST |
+| hetero | heterogeneous per-layer FFN widths | 76.4% | LOST |
+| perlayer | per-layer SliceGPT rotate + slice residual | 59.1% | LOST (badly) |
+| decomp | SliceGPT slice vs layer-deletion | del 77.1 vs slice 64.4 | LOST (decomposition loses to deletion) |
+| absorb | absorb dropped width into kept (fold) | ≤67.7% | LOST |
+| multiaxis / cov / ridge / hybffn / deepcap / stack / dirtransfer / matched | assorted capture/rotation bases | 62–79% | LOST |
+
+### B.2 Structural (merge/tie, bus, reallocation, embedding factorization, added compute)
+
+| lever | what it tests | best | verdict |
+|---|---|---|---|
+| iterbest | iterative staged surgery (s1→s2→final) ± EoRA | **80.5%** | **BEAT** (marginal, ~+1.5 at aggressive band — the one process lever that edged the frontier) |
+| depthcap | add low-rank depth-capture block | 89.8% (light) | TIED on light frontier (collapses at deep) |
+| prog | progressive shrink vs one-shot | 87.6% | LOST (≤ one-shot) |
+| micro | added-compute micro-ops (recur/stack/conv/attn) | 87.1% (only at tiny compression) | LOST |
+| busffn | layer-tie / hidden-bus / FFN-widen / emb-factor | ≤76.7% | LOST |
+| realloc | reallocate pruned width into new depth blocks | 54.7% | LOST (badly) |
+| addon | add canon / MTP prediction heads | 79.0% ≈ base | TIED-at-baseline (heads add nothing) |
+| staged / seq / joint / wider / linattn / kill25 | staging, sequential, off-shape, linear-attn | 63–77% | LOST |
+
+### B.3–B.5 Distillation — loss, data/teacher, harder task
+
+| lever | what it tests | best | verdict |
+|---|---|---|---|
+| kdpush | vanilla vs feat / rev-KL / DKD / relation / all | dkd 88.6 ≈ vanilla 88.5 | TIED (no loss beats vanilla KD) |
+| gkd / terminal | JSD-GKD; focus (topk/disagree/fusion) | ≤88.3% | TIED / LOST |
+| healdata | heal corpus C4 vs instruct vs teacher-gen | **C4 79.0** > teacher 78.9 > instruct 77.6 | LOST (plain C4 is best) |
+| retpush / gapcloser | bidirectional + big-teacher KD | ≤80.6% (many OOM) | LOST |
+| harder | MTP / MTP-KD / seq1024 / hard-mining | 66.9–68.0% (flat) | LOST/NEUTRAL (harder task gives no lift) |
+| biggerbase | 3B as teacher | mostly OOM on 23 GB | INCONCLUSIVE (memory-blocked → the H100) |
+
+### B.6 Capability recovery (the crater — all NEUTRAL, none restore reasoning)
+
+| lever | what it tests | result (gsm8k) | verdict |
+|---|---|---|---|
+| wthresh | width-threshold sweep, hard basket | 42.5 → 9.3 as width 1472→1344 | shows the reasoning cliff |
+| recover | pure-KD ± math mix @17/29% | 4.2 / 8.5 / 1.1 | NEUTRAL (math barely moves) |
+| reshape | protect-math / slice / add-capture, hard basket | 2.3–3.6 | NEUTRAL (basis doesn't restore math) |
+| captrade | shape trade (deep/wide/narrow) | ≈0 in all | NEUTRAL (no shape preserves math) |
+| forget | uncut-heal reference | 59.3 | NEUTRAL (heal is innocent) |
+| aspect / nshape / native | off keep-full shape | ≤79% surface, gsm8k dead | LOST |
+| meta / richmeta | amortized "meta-ReplaceMe" operator | 13–700× worse than per-span oracle | NEUTRAL (learned-operator bet closed) |

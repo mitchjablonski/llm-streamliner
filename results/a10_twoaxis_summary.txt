@@ -1,0 +1,8 @@
+prunecomp	[lm-eval] DOWNSTREAM RETENTION: 78.0% (compressed 53.36 vs teacher 68.43) 
+obsffn_zero	[surgery] OBS-FFN pruned 28 FFNs to 0.5 width w/ local reconstruction -> 2121.7M (-37.4% total) [lm-eval] DOWNSTREAM RETENTION: 100.0% (compressed 68.43 vs teacher 68.43) 
+prunecomp	[lm-eval] DOWNSTREAM RETENTION: 78.1% (compressed 53.46 vs teacher 68.43) 
+obsffn_zero	[surgery] OBS-FFN pruned 28 FFNs to 0.5 width w/ local reconstruction -> 965.7M (37.4% total) [lm-eval] DOWNSTREAM RETENTION: 47.1% (compressed 32.24 vs teacher 68.43) 
+obsffn_heal	[surgery] OBS-FFN pruned 28 FFNs to 0.5 width w/ local reconstruction -> 965.7M (37.4% total) [lm-eval] DOWNSTREAM RETENTION: 54.2% (compressed 37.08 vs teacher 68.43) 
+rc_obs70	[surgery] OBS-FFN pruned 21 FFNs to 0.7 width w/ local reconstruction -> 956.0M (38.1% total) [lm-eval] DOWNSTREAM RETENTION: 43.8% (compressed 29.99 vs teacher 68.43) 
+rc_obs50	[surgery] OBS-FFN pruned 21 FFNs to 0.5 width w/ local reconstruction -> 782.6M (49.3% total) [lm-eval] DOWNSTREAM RETENTION: 52.5% (compressed 35.93 vs teacher 68.43) 
+rc_obs_split	[surgery] OBS-FFN pruned 23 FFNs to 0.6 width w/ local reconstruction -> 929.9M (39.8% total) [lm-eval] DOWNSTREAM RETENTION: 48.6% (compressed 33.28 vs teacher 68.43) 

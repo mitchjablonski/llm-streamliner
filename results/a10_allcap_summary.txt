@@ -1,0 +1,6 @@
+d2	[lm-eval] DOWNSTREAM RETENTION: 78.2% (compressed 53.46 vs teacher 68.38)
+d0	[lm-eval] DOWNSTREAM RETENTION: 78.5% (compressed 53.67 vs teacher 68.38)
+d2_res	[lm-eval] DOWNSTREAM RETENTION: 78.0% (compressed 53.31 vs teacher 68.38)
+d2_oa	[lm-eval] DOWNSTREAM RETENTION: 76.4% (compressed 52.25 vs teacher 68.38)
+d2_eora	[lm-eval] DOWNSTREAM RETENTION: 78.8% (compressed 53.9 vs teacher 68.38)
+d2_oa_eora	[lm-eval] DOWNSTREAM RETENTION: 78.0% (compressed 53.34 vs teacher 68.38)

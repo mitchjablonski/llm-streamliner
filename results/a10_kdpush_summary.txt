@@ -1,0 +1,7 @@
+vanilla	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.55 vs teacher 68.38)
+feat	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.51 vs teacher 68.38)
+revkl	[lm-eval] DOWNSTREAM RETENTION: 88.2% (compressed 60.28 vs teacher 68.38)
+std	[lm-eval] DOWNSTREAM RETENTION: 88.1% (compressed 60.27 vs teacher 68.38)
+dkd	[lm-eval] DOWNSTREAM RETENTION: 88.6% (compressed 60.56 vs teacher 68.38)
+rel	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.52 vs teacher 68.38)
+all	[lm-eval] DOWNSTREAM RETENTION: 87.5% (compressed 59.83 vs teacher 68.38)

@@ -1,0 +1,4 @@
+mtpkd_h4	[lm-eval] DOWNSTREAM RETENTION: 68.0% (compressed 44.11 vs teacher 64.86)
+seq1024	[lm-eval] DOWNSTREAM RETENTION: 67.5% (compressed 43.75 vs teacher 64.86)
+hardmine	[lm-eval] DOWNSTREAM RETENTION: 67.9% (compressed 44.06 vs teacher 64.86)
+mtp_h8	[lm-eval] DOWNSTREAM RETENTION: 66.9% (compressed 43.39 vs teacher 64.86)

@@ -1,0 +1,3 @@
+d2_cov	1543.7M -> 1074.7M	[lm-eval] DOWNSTREAM RETENTION: 76.6% (compressed 52.37 vs teacher 68.38)
+d6_cov	1543.7M -> 944.3M	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.91 vs teacher 68.38)
+d6_cov_eora	1543.7M -> 965.2M	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.91 vs teacher 68.38)

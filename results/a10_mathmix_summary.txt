@@ -1,0 +1,1 @@
+mathmix50	[lm-eval] DOWNSTREAM RETENTION: 81.3% (compressed 44.3 vs teacher 54.48)

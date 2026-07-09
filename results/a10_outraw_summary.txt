@@ -1,0 +1,3 @@
+raw_w1280	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.53 vs teacher 68.38)
+sinkpin_w1280	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.55 vs teacher 68.38)
+sinkpin_d4	[lm-eval] DOWNSTREAM RETENTION: 75.2% (compressed 51.45 vs teacher 68.38)

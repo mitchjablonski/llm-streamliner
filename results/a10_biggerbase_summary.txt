@@ -1,0 +1,3 @@
+3b_zero25	[lm-eval] DOWNSTREAM RETENTION: 74.7% (compressed 53.78 vs teacher 71.97)
+3b_25	
+3b_50	

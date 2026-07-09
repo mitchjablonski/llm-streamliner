@@ -1,0 +1,6 @@
+base	[lm-eval] DOWNSTREAM RETENTION: 82.7% (compressed 48.84 vs teacher 59.05)
+topk	[lm-eval] DOWNSTREAM RETENTION: 81.8% (compressed 48.3 vs teacher 59.05)
+disagree	[lm-eval] DOWNSTREAM RETENTION: 82.4% (compressed 48.64 vs teacher 59.05)
+both	[lm-eval] DOWNSTREAM RETENTION: 81.0% (compressed 47.82 vs teacher 59.05)
+fusion	[lm-eval] DOWNSTREAM RETENTION: 82.7% (compressed 48.85 vs teacher 59.05)
+all	[lm-eval] DOWNSTREAM RETENTION: 81.4% (compressed 48.05 vs teacher 59.05)

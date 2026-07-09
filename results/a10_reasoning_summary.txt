@@ -1,0 +1,1 @@
+frontier_reason	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 47.99 vs teacher 65.76)

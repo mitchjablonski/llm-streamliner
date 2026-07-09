@@ -4,7 +4,7 @@
 
 Here "benchmark average" means the mean over the **8 surface/completion tasks** — `lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa` — the basket structured-compression papers typically report. At the same 17% cut, GSM8K (math) is already gone and MMLU (knowledge) is degrading; push to 32% (adding depth deletion) and MMLU too falls to chance. This repository contains the compression method, the capability-stratified evaluation, and the reproduction scripts behind that finding. The headline result is not a new state-of-the-art retention number; it is that **aggregate retention numbers are surface-task numbers that hide a reasoning crater**, and a mechanism-level account of where and why reasoning breaks under compression.
 
-📄 **Full write-up:** [`docs/capability_stratified_compression.md`](docs/capability_stratified_compression.md) · visual version: [`docs/index.html`](docs/index.html)
+📄 **Full write-up:** [`docs/capability_stratified_compression.md`](docs/capability_stratified_compression.md) · visual version: [`docs/index.html`](docs/index.html) · foundational method + scaling law: [`docs/prior_work_co_compression.md`](docs/prior_work_co_compression.md)
 
 ---
 
@@ -68,9 +68,11 @@ src/                     the method — arch.py (operator zoo), surgery, distill
 scripts/run_generative.py entry point (all levers as flags)
 scripts/heal_delta.py    per-matrix SVD of the heal delta (shows the heal is a dense polish)
 reproduce/               clean scripts for the headline claims
-results/                 run summaries the findings are drawn from
-docs/                    full write-up (md + standalone HTML)
+results/                 82 lever summaries (the full negative map) + the scaling-law table
+docs/                    write-up (md) · standalone HTML · prior-work co-compression study
 ```
+
+The write-up also includes a **source-scale section** (§8: compressibility rises then saturates with model size — on surface metrics only) and **Appendix B: the full ~70-lever negative map** — the catalog of operators, losses, data, and shapes that did *not* beat the simple recipe or recover reasoning.
 
 ## Scope & limitations
 

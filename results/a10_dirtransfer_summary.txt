@@ -1,0 +1,4 @@
+ffn_zero	[surgery] OBS-FFN pruned 24 FFNs to 0.5 width w/ local reconstruction -> 1011.9M (28.5% total) [lm-eval] DOWNSTREAM RETENTION: 52.9% (compressed 31.04 vs teacher 58.7) 
+attn_zero	[surgery] OBS-attn pruned 24 attn to 0.5 heads w/ o_proj reconstruction -> 1213.2M (14.2% total) [lm-eval] DOWNSTREAM RETENTION: 54.4% (compressed 31.93 vs teacher 58.7) 
+both_zero	[surgery] OBS-attn pruned 24 attn to 0.5 heads w/ o_proj reconstruction -> 810.5M (42.7% total) [lm-eval] DOWNSTREAM RETENTION: 52.3% (compressed 30.71 vs teacher 58.7) 
+both_heal	[surgery] OBS-attn pruned 24 attn to 0.5 heads w/ o_proj reconstruction -> 810.5M (42.7% total) [lm-eval] DOWNSTREAM RETENTION: 62.8% (compressed 36.86 vs teacher 58.7) 

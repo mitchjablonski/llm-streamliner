@@ -1,0 +1,2 @@
+ph1280_d6	[saved phase-1 model -> data_cache/stage_ph1280_d6 (hidden=1280]	[lm-eval] DOWNSTREAM RETENTION: 63.3% (compressed 43.31 vs teacher 68.38)
+ph1024_d4	[saved phase-1 model -> data_cache/stage_ph1024_d4 (hidden=1024]	[lm-eval] DOWNSTREAM RETENTION: 63.0% (compressed 43.06 vs teacher 68.38)

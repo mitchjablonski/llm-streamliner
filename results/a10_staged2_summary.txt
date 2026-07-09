@@ -1,0 +1,2 @@
+ph1280_d6	[lm-eval] DOWNSTREAM RETENTION: 63.5% (compressed 43.39 vs teacher 68.38)
+ph1024_d4	[lm-eval] DOWNSTREAM RETENTION: 63.1% (compressed 43.16 vs teacher 68.38)

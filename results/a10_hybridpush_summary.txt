@@ -1,0 +1,2 @@
+w384_k128	[lm-eval] DOWNSTREAM RETENTION: 78.4% (compressed 46.0 vs teacher 58.7)
+w256_k256	[lm-eval] DOWNSTREAM RETENTION: 77.8% (compressed 45.68 vs teacher 58.7)

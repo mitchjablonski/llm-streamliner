@@ -1,0 +1,6 @@
+tok10M	[lm-eval] DOWNSTREAM RETENTION: 86.6% (compressed 59.23 vs teacher 68.38)
+s1_1408	
+prog1280	[lm-eval] DOWNSTREAM RETENTION: 87.6% (compressed 59.93 vs teacher 68.38)
+oneshot1024	[lm-eval] DOWNSTREAM RETENTION: 72.2% (compressed 49.39 vs teacher 68.38)
+s1_1280	
+prog1024	[lm-eval] DOWNSTREAM RETENTION: 71.3% (compressed 48.74 vs teacher 68.38)

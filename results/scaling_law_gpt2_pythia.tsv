@@ -1,0 +1,11 @@
+pythia-1.4b	1.4	single-r6-bestrecipe	17.8	-	86.1	full	C4+2stage+batched
+pythia-1.4b	1.4	AMBR2-r7k2	17.8	-	85.5	full	multi-block-NO-gain-vs-single
+pythia-1.4b	1.4	AMBR3-r8k3	17.8	-	86.9	full	multi-block-marginal-within-noise
+pythia-1.4b	1.4	single-r4-lowcompress	10.7	-	91.8	full	compression-is-the-lever
+pythia-2.8b	2.8	single-r8-bestrecipe	19.8	-	86.3	full	scaling-downstream-FLAT
+pythia-6.9b	6.9	single-r8-bestrecipe	20.6	-	86.6	full	scaling-downstream-FLAT-ppl-rises-66to72
+pythia-1.4b	1.4	big18-300Mtok	17.8	-	87.5	full	data-lever-+1.4-vs-30M-DIMINISHING
+pythia-1.4b	1.4	big11-300Mtok	10.7	-	92.3	full	data-lever-+0.5-vs-30M-DIMINISHING
+pythia-1.4b	1.4	BI-placed-r6	17.8	-	92.2	full	WIN-+6.1-vs-geometric86.1-(BI-span-14-22-protect-outer)
+pythia-1.4b	1.4	BI-placed-r9k2	24.9	-	85.6	full	BI+2blocks
+pythia-1.4b	1.4	BI-placed-r9	28.5	-	84.2	full	WIN-+9.7-vs-geometric74.5-cliff-flattened

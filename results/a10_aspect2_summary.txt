@@ -1,0 +1,8 @@
+cons_sweet	aspect_ratio=27	params:-10.0% total)	[lm-eval] DOWNSTREAM RETENTION: 46.7% (compressed 31.9 vs teacher 68.38)
+cons_deep	aspect_ratio=27	params:-10.0% total)	[lm-eval] DOWNSTREAM RETENTION: 47.7% (compressed 32.65 vs teacher 68.38)
+re20	aspect_ratio=27	params:-2.5% total)	[lm-eval] DOWNSTREAM RETENTION: 59.6% (compressed 40.73 vs teacher 68.38)
+re30	aspect_ratio=27	params:5.0% total)	[lm-eval] DOWNSTREAM RETENTION: 46.5% (compressed 31.79 vs teacher 68.38)
+re50	aspect_ratio=27	params:-2.5% total)	[lm-eval] DOWNSTREAM RETENTION: 47.4% (compressed 32.44 vs teacher 68.38)
+re60	aspect_ratio=27	params:-2.5% total)	[lm-eval] DOWNSTREAM RETENTION: 47.6% (compressed 32.55 vs teacher 68.38)
+cons_deep_heal	aspect_ratio=27	params:-10.0% total)	[lm-eval] DOWNSTREAM RETENTION: 60.3% (compressed 41.21 vs teacher 68.38)
+re60_heal	aspect_ratio=27	params:-2.5% total)	[lm-eval] DOWNSTREAM RETENTION: 64.9% (compressed 44.37 vs teacher 68.38)

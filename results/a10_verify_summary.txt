@@ -1,0 +1,4 @@
+corr_zero	
+corr_heal	
+del_only	[lm-eval] DOWNSTREAM RETENTION: 80.1% (compressed 54.76 vs teacher 68.38) 
+del_svd	[lm-eval] DOWNSTREAM RETENTION: 71.6% (compressed 48.98 vs teacher 68.38) 

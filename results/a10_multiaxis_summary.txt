@@ -1,0 +1,8 @@
+combine_renorm	[lm-eval] DOWNSTREAM RETENTION: 88.4% (compressed 60.44 vs teacher 68.38)
+oneshot	[lm-eval] DOWNSTREAM RETENTION: 75.1% (compressed 51.33 vs teacher 68.38)
+seq_s1	
+seq	[lm-eval] DOWNSTREAM RETENTION: 73.7% (compressed 50.38 vs teacher 68.38)
+rr_s1	
+rr_s2	
+rr_s3	
+rr	[lm-eval] DOWNSTREAM RETENTION: 75.3% (compressed 51.47 vs teacher 68.38)

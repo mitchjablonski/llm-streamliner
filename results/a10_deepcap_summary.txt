@@ -1,0 +1,5 @@
+raw1024	[lm-eval] DOWNSTREAM RETENTION: 72.3% (compressed 49.43 vs teacher 68.38)
+combine1024	[lm-eval] DOWNSTREAM RETENTION: 71.6% (compressed 48.94 vs teacher 68.38)
+combine768	[lm-eval] DOWNSTREAM RETENTION: 72.9% (compressed 49.82 vs teacher 68.38)
+addchan1152	[lm-eval] DOWNSTREAM RETENTION: 79.4% (compressed 54.26 vs teacher 68.38)
+rrr1024	[lm-eval] DOWNSTREAM RETENTION: 72.4% (compressed 49.52 vs teacher 68.38)

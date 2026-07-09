@@ -1,0 +1,5 @@
+rm_zero	[lm-eval] DOWNSTREAM RETENTION: 48.2% (compressed 32.88 vs teacher 68.17)	[surgery] qwen2: removed 9 layers -> 0 spliced block(s); anchors(comp->teacher) []; params 1543.7M -> 1124.9M (27.1% reduction)
+rm_heal	[lm-eval] DOWNSTREAM RETENTION: 68.0% (compressed 46.36 vs teacher 68.17)	[surgery] qwen2: removed 9 layers -> 0 spliced block(s); anchors(comp->teacher) []; params 1543.7M -> 1124.9M (27.1% reduction)
+del_best	[lm-eval] DOWNSTREAM RETENTION: 77.0% (compressed 52.51 vs teacher 68.17)	[surgery] qwen2: removed 9 layers -> 1 spliced block(s); anchors(comp->teacher) [(11, 19)]; params 1543.7M -> 1169.3M (24.3% reduction)
+frz_mse	[lm-eval] DOWNSTREAM RETENTION: 79.6% (compressed 47.01 vs teacher 59.05)	[surgery] gpt_neox: removed 6 layers -> 1 spliced block(s); anchors(comp->teacher) [(10, 15)]; params 1414.6M -> 1162.9M (17.8% reduction)
+frz_lil	[lm-eval] DOWNSTREAM RETENTION: 80.4% (compressed 47.48 vs teacher 59.05)	[surgery] gpt_neox: removed 6 layers -> 1 spliced block(s); anchors(comp->teacher) [(10, 15)]; params 1414.6M -> 1162.9M (17.8% reduction)

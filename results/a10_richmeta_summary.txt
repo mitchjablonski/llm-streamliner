@@ -1,0 +1,15 @@
+[meta-rich] model=EleutherAI/pythia-1.4b span=4 held=(10, 4)
+  per-span ORACLE (least-squares, the bar):  0.0041
+  averaged-T transfer (weak baseline):       34755.5625
+  RICH meta operator (zero-shot):            0.4446
+  VERDICT: vs oracle loses (109x worse); vs naive better
+[meta-rich] model=EleutherAI/pythia-1.4b span=6 held=(9, 6)
+  per-span ORACLE (least-squares, the bar):  0.0009
+  averaged-T transfer (weak baseline):       76546.8047
+  RICH meta operator (zero-shot):            0.5985
+  VERDICT: vs oracle loses (703x worse); vs naive better
+[meta-rich] model=Qwen/Qwen2.5-1.5B span=5 held=(12, 5)
+  per-span ORACLE (least-squares, the bar):  0.0317
+  averaged-T transfer (weak baseline):       2145.0635
+  RICH meta operator (zero-shot):            0.4168
+  VERDICT: vs oracle loses (13x worse); vs naive better

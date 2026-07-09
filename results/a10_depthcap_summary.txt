@@ -1,0 +1,5 @@
+g4_r512	1543.7M -> 1362.8M	[lm-eval] DOWNSTREAM RETENTION: 89.2% (compressed 60.98 vs teacher 68.38)
+g4_r512_gd	1543.7M -> 1362.8M	[lm-eval] DOWNSTREAM RETENTION: 89.8% (compressed 61.38 vs teacher 68.38)
+w1280_g6	1543.7M -> 1060.3M	[lm-eval] DOWNSTREAM RETENTION: 75.1% (compressed 51.38 vs teacher 68.38)
+w1280_g6_gd	1543.7M -> 1060.3M	[lm-eval] DOWNSTREAM RETENTION: 56.1% (compressed 38.34 vs teacher 68.38)
+hyb_dd	1543.7M -> 944.3M	[lm-eval] DOWNSTREAM RETENTION: 72.7% (compressed 49.71 vs teacher 68.38)

@@ -1,0 +1,1 @@
+rm_best_sdd	[lm-eval] DOWNSTREAM RETENTION: 78.2% (compressed 53.5 vs teacher 68.43)

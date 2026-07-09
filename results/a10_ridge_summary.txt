@@ -1,0 +1,1 @@
+t22	1543.7M -> 1052.4M depth=22 hidden=1280	[lm-eval] DOWNSTREAM RETENTION: 76.6% (compressed 52.41 vs teacher 68.38)

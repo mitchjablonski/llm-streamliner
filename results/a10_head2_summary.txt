@@ -1,0 +1,6 @@
+head_alone	[lm-eval] DOWNSTREAM RETENTION: 87.0% (compressed 59.48 vs teacher 68.38)	[lm-eval] compressed: avg 59.48
+head_del	[lm-eval] DOWNSTREAM RETENTION: 76.8% (compressed 52.53 vs teacher 68.38)	[lm-eval] compressed: avg 52.53
+native_05	[lm-eval] DOWNSTREAM RETENTION: 100.0% (compressed 59.63 vs teacher 59.63)	[lm-eval] compressed: avg 59.63
+native_3b	[lm-eval] DOWNSTREAM RETENTION: 100.1% (compressed 72.01 vs teacher 71.95)	[lm-eval] compressed: avg 72.01
+c3b_w1408	torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 446.00 MiB. GPU 0 has a total capacity of 22.06 GiB of which 345.44 MiB is free. Including non-PyTorch memory, this process has 21.71 GiB memory in use. Of the allocated memory 21.24 GiB is allocated by PyTorch, and 191.73 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)	
+c3b_w1024	[lm-eval] DOWNSTREAM RETENTION: 61.6% (compressed 44.35 vs teacher 71.95)	[lm-eval] compressed: avg 44.35

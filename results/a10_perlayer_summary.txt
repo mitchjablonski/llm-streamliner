@@ -1,0 +1,8 @@
+f1024_zero	[lm-eval] DOWNSTREAM RETENTION: 44.5% (compressed 30.41 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 1024]
+f512_zero	[lm-eval] DOWNSTREAM RETENTION: 44.3% (compressed 30.29 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 512]
+f256_zero	[lm-eval] DOWNSTREAM RETENTION: 43.9% (compressed 30.05 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 256]
+f1024_heal	[lm-eval] DOWNSTREAM RETENTION: 59.1% (compressed 40.38 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 1024]
+f512_heal	[lm-eval] DOWNSTREAM RETENTION: 45.5% (compressed 31.13 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 512]
+f256_heal	[lm-eval] DOWNSTREAM RETENTION: 44.4% (compressed 30.36 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 256]
+f512_learn_heal	[lm-eval] DOWNSTREAM RETENTION: 45.6% (compressed 31.15 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 512]
+f256_learn_heal	[lm-eval] DOWNSTREAM RETENTION: 44.6% (compressed 30.53 vs teacher 68.38)	[PER-LAYER SliceGPT rotate+slice residual 1536 -> 256]

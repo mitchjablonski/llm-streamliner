@@ -1,0 +1,4 @@
+w1280_d6	[lm-eval] DOWNSTREAM RETENTION: 79.0% (compressed 54.03 vs teacher 68.38)
+w1216_d5	[lm-eval] DOWNSTREAM RETENTION: 77.8% (compressed 53.21 vs teacher 68.38)
+w1088_d3	[lm-eval] DOWNSTREAM RETENTION: 74.0% (compressed 50.62 vs teacher 68.38)
+w1024_d1	[lm-eval] DOWNSTREAM RETENTION: 72.0% (compressed 49.21 vs teacher 68.38)

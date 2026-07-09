@@ -1,0 +1,4 @@
+rm_instruct_zero	[lm-eval] DOWNSTREAM RETENTION: 79.2% (compressed 54.17 vs teacher 68.43)
+subfit_instruct_zero	[lm-eval] DOWNSTREAM RETENTION: 79.4% (compressed 54.3 vs teacher 68.43)
+rm_instruct_heal	[lm-eval] DOWNSTREAM RETENTION: 80.5% (compressed 55.06 vs teacher 68.43)
+subfit_instruct_heal	[lm-eval] DOWNSTREAM RETENTION: 80.4% (compressed 55.04 vs teacher 68.43)

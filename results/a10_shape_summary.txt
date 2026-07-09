@@ -1,0 +1,8 @@
+ph1280_zero	aspect_ratio=46	params:	[lm-eval] DOWNSTREAM RETENTION: 67.7% (compressed 46.27 vs teacher 68.38)
+ph1024_zero	aspect_ratio=37	params:	[lm-eval] DOWNSTREAM RETENTION: 49.2% (compressed 33.65 vs teacher 68.38)
+ph1280_heal	aspect_ratio=46	params:	[lm-eval] DOWNSTREAM RETENTION: 88.5% (compressed 60.53 vs teacher 68.38)
+ph1024_heal	aspect_ratio=37	params:	[lm-eval] DOWNSTREAM RETENTION: 71.9% (compressed 49.15 vs teacher 68.38)
+ffno_zero	aspect_ratio=27	params:15.0% total)	[lm-eval] DOWNSTREAM RETENTION: 46.5% (compressed 31.79 vs teacher 68.38)
+ffno_heal	aspect_ratio=27	params:15.0% total)	[lm-eval] DOWNSTREAM RETENTION: 67.7% (compressed 46.3 vs teacher 68.38)
+combo_heal	aspect_ratio=23	params:29.1% total)	[lm-eval] DOWNSTREAM RETENTION: 64.5% (compressed 44.11 vs teacher 68.38)
+del8_heal	aspect_ratio=77	params:	[lm-eval] DOWNSTREAM RETENTION: 80.0% (compressed 54.67 vs teacher 68.38)

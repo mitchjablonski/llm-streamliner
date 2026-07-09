@@ -1,0 +1,7 @@
+del9	[lm-eval] DOWNSTREAM RETENTION: 77.1% (compressed 52.58 vs teacher 68.17)	[shape] depth=20 hidden=1536 aspect_ratio=77 (small-model literature optimum ~55-85; higher = too shallow-wide for the param budget) 
+slice		[shape] depth=28 hidden=1024 aspect_ratio=37 (small-model literature optimum ~55-85; higher = too shallow-wide for the param budget) 
+slice	[lm-eval] DOWNSTREAM RETENTION: 64.4% (compressed 43.9 vs teacher 68.17)	[shape] depth=28 hidden=1024 aspect_ratio=37 (small-model literature optimum ~55-85; higher = too shallow-wide for the param budget) 
+slice_imp	[lm-eval] DOWNSTREAM RETENTION: 67.3% (compressed 45.9 vs teacher 68.17)	[surgery] qwen2: removed 0 layers -> 0 spliced block(s); anchors(comp->teacher) []; params 1543.7M -> 1184.7M (23.3% reduction)
+balanced	[lm-eval] DOWNSTREAM RETENTION: 68.6% (compressed 46.77 vs teacher 68.17)	[surgery] qwen2: removed 0 layers -> 0 spliced block(s); anchors(comp->teacher) []; params 1543.7M -> 1285.3M (16.7% reduction)
+balanced_tc		[surgery] qwen2: removed 0 layers -> 0 spliced block(s); anchors(comp->teacher) []; params 1543.7M -> 1285.3M (16.7% reduction)
+balanced_tc	[lm-eval] DOWNSTREAM RETENTION: 67.5% (compressed 46.1 vs teacher 68.29)

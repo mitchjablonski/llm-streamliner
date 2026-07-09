@@ -1,0 +1,6 @@
+rm_cosine	
+rm_sdd	
+rm_cosine	
+rm_cosine	[lm-eval] DOWNSTREAM RETENTION: 79.7% (compressed 54.54 vs teacher 68.43)
+rm_sdd	[lm-eval] DOWNSTREAM RETENTION: 79.9% (compressed 54.7 vs teacher 68.43)
+rm_best	[lm-eval] DOWNSTREAM RETENTION: 79.7% (compressed 54.53 vs teacher 68.43)

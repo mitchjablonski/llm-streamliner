@@ -1,0 +1,2 @@
+obshead	[lm-eval] DOWNSTREAM RETENTION: 71.4% (compressed 48.79 vs teacher 68.38)
+fullhead	[lm-eval] DOWNSTREAM RETENTION: 78.0% (compressed 53.36 vs teacher 68.38)

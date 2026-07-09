@@ -1,0 +1,5 @@
+rrr	[lm-eval] DOWNSTREAM RETENTION: 87.4% (compressed 59.73 vs teacher 68.38)
+ortho	Traceback (most recent call last):
+wanda	[lm-eval] DOWNSTREAM RETENTION: 86.9% (compressed 59.4 vs teacher 68.38)
+combine	[lm-eval] DOWNSTREAM RETENTION: 88.4% (compressed 60.46 vs teacher 68.38)
+pls	[lm-eval] DOWNSTREAM RETENTION: 86.7% (compressed 59.26 vs teacher 68.38)

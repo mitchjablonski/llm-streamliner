@@ -1,0 +1,5 @@
+prunecomp	
+obsffn_zero	
+obsffn_heal	
+hybrid_w256	[lm-eval] DOWNSTREAM RETENTION: 77.2% (compressed 45.55 vs teacher 59.02)
+fuse_frozen2	[lm-eval] DOWNSTREAM RETENTION: 64.6% (compressed 38.1 vs teacher 59.02)

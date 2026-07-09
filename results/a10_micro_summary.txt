@@ -1,0 +1,6 @@
+collapse	reduction=21.3586	[lm-eval] DOWNSTREAM RETENTION: 57.0% (compressed 33.66 vs teacher 59.05)	
+block1	reduction=17.7989	[lm-eval] DOWNSTREAM RETENTION: 79.7% (compressed 47.09 vs teacher 59.05)	  [warm-distill] final feat 0.2751 after 6000 steps (converged=False)
+cheapconv	reduction=20.1705	[lm-eval] DOWNSTREAM RETENTION: 67.0% (compressed 39.56 vs teacher 59.05)	  [warm-distill] final feat 0.5558 after 6000 steps (converged=False)
+cheapattn	reduction=18.9843	[lm-eval] DOWNSTREAM RETENTION: 66.0% (compressed 38.95 vs teacher 59.05)	  [warm-distill] final feat 0.5661 after 6000 steps (converged=False)
+recur3	reduction=17.7989	[lm-eval] DOWNSTREAM RETENTION: 78.6% (compressed 46.41 vs teacher 59.05)	  [warm-distill] final feat 0.2282 after 6000 steps (converged=False)
+stack3	reduction=10.6793	[lm-eval] DOWNSTREAM RETENTION: 87.1% (compressed 51.45 vs teacher 59.05)	  [warm-distill] final feat 0.0864 after 6000 steps (converged=False)

@@ -1,0 +1,2 @@
+cp29_hard	[lm-eval] DOWNSTREAM RETENTION: 100.0% (compressed 17.41 vs teacher 17.41)
+teacher_hard	[lm-eval] compressed: avg 55.45 | gsm8k=61.71 mmlu=59.58 arc_challenge=45.05

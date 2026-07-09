@@ -1,0 +1,4 @@
+d4w1280_zero	[removed 4 layer / hidden width 1536 -> 1280]	[lm-eval] DOWNSTREAM RETENTION: 52.0% (compressed 35.54 vs teacher 68.38)
+d4w1280_heal	[removed 4 layer / hidden width 1536 -> 1280]	[lm-eval] DOWNSTREAM RETENTION: 75.4% (compressed 51.57 vs teacher 68.38)
+d6w1344_heal	[removed 6 layer / hidden width 1536 -> 1344]	[lm-eval] DOWNSTREAM RETENTION: 77.4% (compressed 52.91 vs teacher 68.38)
+d4w1152_heal	[removed 4 layer / hidden width 1536 -> 1152]	[lm-eval] DOWNSTREAM RETENTION: 70.0% (compressed 47.84 vs teacher 68.38)

@@ -1,0 +1,1 @@
+linattn_w256	[lm-eval] DOWNSTREAM RETENTION: 74.6% (compressed 44.06 vs teacher 59.06)

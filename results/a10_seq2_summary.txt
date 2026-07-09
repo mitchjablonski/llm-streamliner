@@ -1,0 +1,2 @@
+seq_cov	1543.7M -> 944.3M	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.94 vs teacher 68.38)
+seq_nocov	1543.7M -> 944.3M	[lm-eval] DOWNSTREAM RETENTION: 73.5% (compressed 50.25 vs teacher 68.38)

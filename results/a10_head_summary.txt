@@ -1,0 +1,4 @@
+w1280_g5_wanda	[lm-eval] DOWNSTREAM RETENTION: 78.7% (compressed 53.83 vs teacher 68.38)	[obs_gqa_prune (wanda): query heads 12 -> 10 (6->5 per KV group]
+w1280_g5_energy	[lm-eval] DOWNSTREAM RETENTION: 67.0% (compressed 45.82 vs teacher 68.38)	[obs_gqa_prune (energy): query heads 12 -> 10 (6->5 per KV group]
+w1280_g5_norm	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.95 vs teacher 68.38)	[obs_gqa_prune (norm): query heads 12 -> 10 (6->5 per KV group]
+w1280_g4_wanda	[lm-eval] DOWNSTREAM RETENTION: 71.0% (compressed 48.56 vs teacher 68.38)	[obs_gqa_prune (wanda): query heads 12 -> 8 (6->4 per KV group]

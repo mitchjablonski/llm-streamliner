@@ -1,0 +1,2 @@
+w1792_13L	1235.8M -> 921.7M depth=13 hidden=1792	[lm-eval] DOWNSTREAM RETENTION: 75.3% (compressed 46.31 vs teacher 61.47)
+w1920_12L	1235.8M -> 930.5M depth=12 hidden=1920	[lm-eval] DOWNSTREAM RETENTION: 75.7% (compressed 46.54 vs teacher 61.47)

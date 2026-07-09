@@ -1,0 +1,12 @@
+[meta-replaceme] model=EleutherAI/pythia-1.4b span=4 held=(10, 4)
+  held-span OWN least-squares (oracle, fits to held): 0.0041
+  META operator (ZERO-SHOT, never saw held span):     0.4887
+  VERDICT: meta-operator GENERALIZES (beats naive transfer); gap-to-oracle +0.4846
+[meta-replaceme] model=EleutherAI/pythia-1.4b span=6 held=(9, 6)
+  held-span OWN least-squares (oracle, fits to held): 0.0009
+  META operator (ZERO-SHOT, never saw held span):     0.7245
+  VERDICT: meta-operator GENERALIZES (beats naive transfer); gap-to-oracle +0.7237
+[meta-replaceme] model=Qwen/Qwen2.5-1.5B span=5 held=(12, 5)
+  held-span OWN least-squares (oracle, fits to held): 0.0317
+  META operator (ZERO-SHOT, never saw held span):     0.7936
+  VERDICT: meta-operator GENERALIZES (beats naive transfer); gap-to-oracle +0.7619

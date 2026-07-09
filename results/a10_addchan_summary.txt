@@ -1,0 +1,4 @@
+w1280_r128_zero	[lm-eval] DOWNSTREAM RETENTION: 88.7% (compressed 60.68 vs teacher 68.38)
+w1280_r128_heal	[lm-eval] DOWNSTREAM RETENTION: 94.9% (compressed 64.87 vs teacher 68.38)
+w1152_r128_heal	[lm-eval] DOWNSTREAM RETENTION: 87.0% (compressed 59.47 vs teacher 68.38)
+w1280_r256_heal	[lm-eval] DOWNSTREAM RETENTION: 100.6% (compressed 68.79 vs teacher 68.38)

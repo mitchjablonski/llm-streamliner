@@ -1,0 +1,3 @@
+1280_26L	[lm-eval] DOWNSTREAM RETENTION: 43.8% (compressed 29.98 vs teacher 68.38)
+1280_28L	[lm-eval] DOWNSTREAM RETENTION: 44.7% (compressed 30.55 vs teacher 68.38)
+1280_22L	[lm-eval] DOWNSTREAM RETENTION: 44.7% (compressed 30.58 vs teacher 68.38)

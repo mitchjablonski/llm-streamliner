@@ -1,0 +1,4 @@
+s1	
+s2	
+final	[lm-eval] DOWNSTREAM RETENTION: 80.1% (compressed 54.77 vs teacher 68.38)
+final_eora	[lm-eval] DOWNSTREAM RETENTION: 80.5% (compressed 55.02 vs teacher 68.38)

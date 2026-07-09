@@ -1,0 +1,2 @@
+realloc_zero	[surgery] realloc width->depth: narrowed 28 FFNs to 0.6 + reallocated removed width into 6 new depth blocks (now 34 deep) -> 1576.8M (-2.1% total) [lm-eval] DOWNSTREAM RETENTION: 44.5% (compressed 30.45 vs teacher 68.43) 
+realloc_heal	[surgery] realloc width->depth: narrowed 28 FFNs to 0.6 + reallocated removed width into 6 new depth blocks (now 34 deep) -> 1576.8M (-2.1% total) [lm-eval] DOWNSTREAM RETENTION: 54.7% (compressed 37.4 vs teacher 68.43) 

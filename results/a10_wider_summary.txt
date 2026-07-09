@@ -1,0 +1,1 @@
+w1344_d8	[lm-eval] DOWNSTREAM RETENTION: 77.6% (compressed 53.09 vs teacher 68.38)

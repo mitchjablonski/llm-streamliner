@@ -1,0 +1,3 @@
+osal_zero	[lm-eval] DOWNSTREAM RETENTION: 68.8% (compressed 47.02 vs teacher 68.38)
+osal_heal	[lm-eval] DOWNSTREAM RETENTION: 87.2% (compressed 59.61 vs teacher 68.38)
+sal_heal	[lm-eval] DOWNSTREAM RETENTION: 86.6% (compressed 59.19 vs teacher 68.38)

@@ -6,7 +6,7 @@
 
 ## Abstract
 
-Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~30M-token) distillation heal — recovers **~88% of average benchmark performance at 17% compression** and appears, by the usual aggregate "retention %" metric, to be a strong, near-SOTA result. **This number is an artifact of the benchmark basket.** When we stratify the evaluation into surface/completion tasks (piqa, hellaswag, lambada, …) versus reasoning and knowledge tasks (gsm8k, MMLU, arc-challenge), the aggregate retention hides a **capability crater**: surface tasks survive (~90%), while multi-step reasoning is *annihilated* (gsm8k 61.7 → ~1) and factual knowledge collapses to near chance (MMLU 59.6 → ~23).
+Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~30M-token) distillation heal — recovers **88% of the 8-task surface/completion benchmark average at 17% compression** and appears, by the usual aggregate "retention %" metric, to be a strong, near-SOTA result. "Benchmark average" here is the mean over `{lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa}` (teacher 68.4 → 60.4 = 88.3%) — the basket structured-compression papers typically report. **This number is an artifact of the benchmark basket.** At the *same* 17% cut, multi-step math is already *annihilated* (gsm8k 61.7 → 3.6, 6% retained) while knowledge is degrading (MMLU 59.6 → 36.0, 60%); deepen to 32% (adding depth deletion) and MMLU too collapses to near chance (→ 23) and gsm8k to ~1. Stratifying the eval into surface/completion vs. reasoning/knowledge tasks exposes a **capability crater** that the aggregate hides.
 
 We then localize and causally isolate the destruction. **Reasoning requires the near-full network — both residual width and depth.** It degrades continuously with width (gsm8k halves roughly every 64 residual channels) and is destroyed *even faster* by depth removal. The heal is causally *innocent* (an uncut model put through the identical heal keeps gsm8k at 59.3); the *surgery* destroys the capability. And it is unrecoverable cheaply: **no** reshape of the residual (channel-selection, rotation, low-rank capture) and **no** heal-objective (pure-KD, math-data, MTP, focus) restores it. At ~30% compression, **no allocation of the cut** — wide-shallow, narrow-deep, or balanced — preserves reasoning.
 
@@ -69,17 +69,19 @@ We measured ReplaceMe's method *in our own harness* on Llama-3.2-1B (25.4% compr
 
 ## 4. The central finding: the capability crater
 
-Take a strong compressed model — 32% compression, keep-full, healed — with a respectable **surface** retention. Now read the hard basket:
+Take a compressed model at **17% compression** (residual width 1280, keep-full, healed) — the point where the surface/completion mean is a healthy **88%**. Now read every task:
 
-| task | teacher | compressed (32%) | retained |
-|---|---|---|---|
-| piqa (surface) | 76.1 | ~68 | ~89% |
-| lambada (surface) | 62.0 | ~38 | ~61% |
-| **gsm8k (math)** | **61.7** | **~1** | **~2%** |
-| **MMLU (knowledge)** | **59.6** | **~23** | **below chance** |
-| **arc-challenge** | 45.1 | ~28 | ~62% |
+| task | kind | teacher | compressed | retained |
+|---|---|---|---|---|
+| sciq | surface | 93.3 | 90.0 | 96% |
+| piqa | surface | 76.1 | 70.6 | 93% |
+| lambada | surface | 62.0 | 48.7 | 79% |
+| **surface/completion mean (8 tasks)** | — | **68.4** | **60.4** | **88%** |
+| arc-challenge | reasoning | 45.1 | 34.1 | 76% |
+| MMLU | knowledge | 59.6 | 36.0 | 60% |
+| **gsm8k** | math | 61.7 | 3.6 | **6%** |
 
-**A single aggregate "retention %" averages a capability that is *intact* with one that is *destroyed*.** The model still completes sentences and answers commonsense questions; it can no longer do multi-step arithmetic and has lost most of its factual knowledge. No amount of surface-benchmark reporting reveals this — you have to evaluate reasoning and knowledge directly.
+**A single aggregate "retention %" averages a capability that is *intact* (surface, 88%) with one that is *destroyed* (math, 6%).** The model still completes sentences and answers commonsense questions; it can no longer do multi-step arithmetic. Knowledge (MMLU) is degrading here (60%) and collapses to chance (~23) only under deeper, depth-including compression (§5). No amount of surface-benchmark reporting reveals this — you have to evaluate reasoning and knowledge directly.
 
 This is the paper's core claim: **cheap structured compression is capability-stratified. Reported retention numbers are surface-task numbers that are blind to reasoning collapse.**
 

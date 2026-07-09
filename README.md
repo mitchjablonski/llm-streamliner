@@ -1,8 +1,8 @@
 # LLM-Streamliner — Capability-Stratified Compression
 
-**Cheap structured compression of a 1.5B language model keeps ~88% of average benchmark performance at 17% compression — and silently destroys the model's ability to reason.**
+**Cheap structured compression of a 1.5B language model keeps 88% of the surface/completion benchmark average at 17% compression — while its multi-step math reasoning is destroyed (GSM8K 61.7 → 3.6, 6% retained).**
 
-This repository contains the compression method, the capability-stratified evaluation, and the reproduction scripts behind that finding. The headline result is not a new state-of-the-art retention number; it is that **aggregate retention numbers are surface-task numbers that hide a reasoning crater**, and a mechanism-level account of where and why reasoning breaks under compression.
+Here "benchmark average" means the mean over the **8 surface/completion tasks** — `lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa` — the basket structured-compression papers typically report. At the same 17% cut, GSM8K (math) is already gone and MMLU (knowledge) is degrading; push to 32% (adding depth deletion) and MMLU too falls to chance. This repository contains the compression method, the capability-stratified evaluation, and the reproduction scripts behind that finding. The headline result is not a new state-of-the-art retention number; it is that **aggregate retention numbers are surface-task numbers that hide a reasoning crater**, and a mechanism-level account of where and why reasoning breaks under compression.
 
 📄 **Full write-up:** [`docs/capability_stratified_compression.md`](docs/capability_stratified_compression.md) · visual version: [`docs/index.html`](docs/index.html)
 
@@ -10,17 +10,19 @@ This repository contains the compression method, the capability-stratified evalu
 
 ## The finding in one table
 
-A strong compressed model (Qwen2.5-1.5B, 32% compression, block-replacement + 30M-token distillation heal), evaluated task-by-task against its teacher:
+A compressed model at **17% compression** (Qwen2.5-1.5B, residual width 1280, keep-full block-replacement + 30M-token distillation heal), evaluated task-by-task against its teacher (5-shot GSM8K; `acc`/`acc_norm` per lm-eval defaults):
 
 | task | kind | teacher | compressed | retained |
 |---|---|--:|--:|--:|
-| piqa | surface | 76.1 | ~68 | ~89% |
-| lambada | surface | 62.0 | ~38 | ~61% |
-| arc-challenge | reasoning-lite | 45.1 | ~28 | ~62% |
-| **MMLU** | knowledge | 59.6 | ~23 | **chance** |
-| **gsm8k** | math | 61.7 | ~1 | **~2%** |
+| sciq | surface | 93.3 | 90.0 | 96% |
+| piqa | surface | 76.1 | 70.6 | 93% |
+| lambada | surface | 62.0 | 48.7 | 79% |
+| **surface/completion mean (8 tasks)** | — | **68.4** | **60.4** | **88%** |
+| arc-challenge | reasoning | 45.1 | 34.1 | 76% |
+| MMLU | knowledge | 59.6 | 36.0 | 60% |
+| **gsm8k** | math | 61.7 | 3.6 | **6%** |
 
-One aggregate "retention %" averages a capability that is intact with one that is destroyed.
+The 88% headline is the surface-mean row. One aggregate "retention %" averages a capability that is intact (surface, ~88%) with one that is destroyed (math, 6%). Deepen to 32% (width 1280 + 6 layers removed) and MMLU also collapses to chance (~23) and GSM8K to ~1 — see the write-up.
 
 ## What we establish
 

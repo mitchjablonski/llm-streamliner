@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Capability-Stratified Compression — What Cheap LLM Compression Silently Destroys</title>
-<meta name="description" content="Cheap structured compression of a 1.5B model preserves surface tasks (~88%) while destroying reasoning (gsm8k 62→~1, MMLU→chance). Localized to the residual width/depth, causally isolated to the surgery, grounded in run data.">
+<meta name="description" content="Cheap structured compression of a 1.5B model keeps 88% of the surface/completion benchmark average at 17% compression while its math reasoning is destroyed (gsm8k 61.7→3.6). Localized to residual width and depth, causally isolated to the surgery, grounded in run data.">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Capability-Stratified Compression">
@@ -125,26 +125,26 @@
     <div class="col">
       <div class="eyebrow">Empirical findings · Qwen2.5-1.5B · block-replacement + 30M-token heal</div>
       <h1>The retention number is telling you the truth about the wrong thing.</h1>
-      <p class="dek">Cheap structured compression keeps ~88% of average benchmark performance at 17% compression — and quietly destroys the model's ability to reason.</p>
+      <p class="dek">At 17% compression it keeps 88% of the <strong>surface/completion</strong> benchmark average — the basket compression papers report — while its math reasoning is already destroyed.</p>
 
       <div class="reveal">
         <div class="cell ok">
-          <div class="k">Surface tasks retained</div>
-          <div class="v"><span class="num">~88%</span></div>
-          <div class="cap">piqa, hellaswag, lambada — completion &amp; commonsense</div>
+          <div class="k">Surface / completion mean</div>
+          <div class="v"><span class="num">88%</span></div>
+          <div class="cap">8 tasks · lambada, piqa, sciq, boolq, … · teacher 68.4 &rarr; 60.4</div>
         </div>
         <div class="cell bad">
           <div class="k">GSM8K (math) retained</div>
-          <div class="v"><span class="num">~2%</span></div>
-          <div class="cap">61.7 &rarr; ~1 · multi-step arithmetic, gone</div>
+          <div class="v"><span class="num">6%</span></div>
+          <div class="cap">61.7 &rarr; 3.6 · multi-step arithmetic, gone</div>
         </div>
         <div class="cell bad">
           <div class="k">MMLU (knowledge) retained</div>
-          <div class="v">chance</div>
-          <div class="cap">59.6 &rarr; ~23 · below random on 4-way</div>
+          <div class="v"><span class="num">60%</span></div>
+          <div class="cap">59.6 &rarr; 36.0 · degrading &mdash; falls to chance at 32%</div>
         </div>
       </div>
-      <div class="credit">One aggregate "retention %" averages a capability that is intact with one that is destroyed.</div>
+      <div class="credit">Same model, same 17% cut. One aggregate "retention %" averages a capability that is intact (surface, 88%) with one that is destroyed (math, 6%).</div>
     </div>
   </header>
 
@@ -157,20 +157,22 @@
     <section>
       <div class="kicker"><span class="mk">01</span><div class="eyebrow">The number that lies</div></div>
       <h2>Same model, two verdicts</h2>
-      <p>A strong compressed model at 32% compression, evaluated task-by-task against its teacher. Read down the column: the model still finishes sentences and answers commonsense questions. It can no longer do arithmetic or recall facts.</p>
+      <p>A compressed model at 17% compression (residual width 1280), evaluated task-by-task against its teacher — the point where the surface mean is a healthy 88%. Read down the column: the model still finishes sentences and answers commonsense questions; it can no longer do arithmetic.</p>
       <div class="tbl-wrap">
         <table>
           <thead><tr><th scope="col">Task</th><th scope="col">Kind</th><th scope="col" class="num">Teacher</th><th scope="col" class="num">Compressed</th><th scope="col" class="num">Retained</th></tr></thead>
           <tbody>
-            <tr><td>piqa</td><td class="mono-s">surface</td><td class="num">76.1</td><td class="num">~68</td><td class="num live">~89%</td></tr>
-            <tr><td>lambada</td><td class="mono-s">surface</td><td class="num">62.0</td><td class="num">~38</td><td class="num live">~61%</td></tr>
-            <tr><td>arc-challenge</td><td class="mono-s">reasoning-lite</td><td class="num">45.1</td><td class="num">~28</td><td class="num">~62%</td></tr>
-            <tr><td>MMLU</td><td class="mono-s">knowledge</td><td class="num">59.6</td><td class="num">~23</td><td class="num dead">chance</td></tr>
-            <tr><td>gsm8k</td><td class="mono-s">math</td><td class="num">61.7</td><td class="num">~1</td><td class="num dead">~2%</td></tr>
+            <tr><td>sciq</td><td class="mono-s">surface</td><td class="num">93.3</td><td class="num">90.0</td><td class="num live">96%</td></tr>
+            <tr><td>piqa</td><td class="mono-s">surface</td><td class="num">76.1</td><td class="num">70.6</td><td class="num live">93%</td></tr>
+            <tr><td>lambada</td><td class="mono-s">surface</td><td class="num">62.0</td><td class="num">48.7</td><td class="num live">79%</td></tr>
+            <tr><td><strong>surface mean (8)</strong></td><td class="mono-s">—</td><td class="num">68.4</td><td class="num">60.4</td><td class="num live">88%</td></tr>
+            <tr><td>arc-challenge</td><td class="mono-s">reasoning</td><td class="num">45.1</td><td class="num">34.1</td><td class="num">76%</td></tr>
+            <tr><td>MMLU</td><td class="mono-s">knowledge</td><td class="num">59.6</td><td class="num">36.0</td><td class="num">60%</td></tr>
+            <tr><td>gsm8k</td><td class="mono-s">math</td><td class="num">61.7</td><td class="num">3.6</td><td class="num dead">6%</td></tr>
           </tbody>
         </table>
       </div>
-      <p>No amount of surface-benchmark reporting reveals this. You have to evaluate reasoning and knowledge directly — which most compression papers do not.</p>
+      <p>No amount of surface-benchmark reporting reveals this. You have to evaluate reasoning and knowledge directly — which most compression papers do not. (Deepen to 32% and MMLU too collapses to chance; §02.)</p>
     </section>
 
     <section>

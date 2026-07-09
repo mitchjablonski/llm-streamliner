@@ -1,0 +1,1 @@
+uncut_heal	[lm-eval] compressed: avg 60.51 | gsm8k=59.29 mmlu=59.47 arc_challenge=44.28 lambada_openai=63.13 piqa=76.39

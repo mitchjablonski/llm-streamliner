@@ -1,0 +1,8 @@
+os26	1543.7M -> 1208.4M	[lm-eval] DOWNSTREAM RETENTION: 83.7% (compressed 57.26 vs teacher 68.38)
+os24	1543.7M -> 1130.4M	[lm-eval] DOWNSTREAM RETENTION: 80.2% (compressed 54.87 vs teacher 68.38)
+lm6	1543.7M -> 1052.4M	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.91 vs teacher 68.38)
+lm6_a25	1543.7M -> 1052.4M	[lm-eval] DOWNSTREAM RETENTION: 71.8% (compressed 49.09 vs teacher 68.38)
+emb5_d5	1543.7M -> 1130.4M	[lm-eval] DOWNSTREAM RETENTION: 80.3% (compressed 54.91 vs teacher 68.38)
+emb5_d4	1543.7M -> 1169.4M	
+emb75_d5	1543.7M -> 1083.1M	[lm-eval] DOWNSTREAM RETENTION: 78.1% (compressed 53.39 vs teacher 68.38)
+embgauge	1543.7M -> 1428.2M	[lm-eval] DOWNSTREAM RETENTION: 94.3% (compressed 64.5 vs teacher 68.38)

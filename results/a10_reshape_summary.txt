@@ -1,0 +1,4 @@
+protect96	1543.7M -> 1286.4M gsm8k=3.26 mmlu=35.46 arc_challenge=33.45	[lm-eval] DOWNSTREAM RETENTION: 77.8% (compressed 50.49 vs teacher 64.86)
+protect192	1543.7M -> 1286.4M gsm8k=3.49 mmlu=34.4 arc_challenge=33.7	[lm-eval] DOWNSTREAM RETENTION: 77.4% (compressed 50.23 vs teacher 64.86)
+slice1280	1543.7M -> 1480.9M gsm8k=2.27 mmlu=35.34 arc_challenge=30.72	[lm-eval] DOWNSTREAM RETENTION: 75.5% (compressed 48.97 vs teacher 64.86)
+addcap	1543.7M -> 1286.4M gsm8k=3.03 mmlu=36.21 arc_challenge=33.96	[lm-eval] DOWNSTREAM RETENTION: 78.2% (compressed 50.72 vs teacher 64.86)

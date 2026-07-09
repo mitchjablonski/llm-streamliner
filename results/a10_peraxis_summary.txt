@@ -1,0 +1,5 @@
+width_1344	1543.7M -> 1350.8M	[lm-eval] DOWNSTREAM RETENTION: 92.5% (compressed 63.23 vs teacher 68.38)
+depth_d4	1543.7M -> 1543.7M	[lm-eval] DOWNSTREAM RETENTION: 100.5% (compressed 68.75 vs teacher 68.38)
+ffn_hyb	1543.7M -> 1306.8M	[lm-eval] DOWNSTREAM RETENTION: 89.0% (compressed 60.84 vs teacher 68.38)
+attn_hyb	1543.7M -> 1502.4M	[lm-eval] DOWNSTREAM RETENTION: 98.3% (compressed 67.23 vs teacher 68.38)
+depth_d4fix	1543.7M -> 1403.3M	[lm-eval] DOWNSTREAM RETENTION: 91.8% (compressed 62.78 vs teacher 68.38)

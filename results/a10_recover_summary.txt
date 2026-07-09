@@ -1,0 +1,3 @@
+kd17	gsm8k=4.17 mmlu=36.73 arc_challenge=33.87	[lm-eval] DOWNSTREAM RETENTION: 78.0% (compressed 50.56 vs teacher 64.86)
+kd17_math	gsm8k=8.49 mmlu=37.92 arc_challenge=34.3	[lm-eval] DOWNSTREAM RETENTION: 78.6% (compressed 50.95 vs teacher 64.86)
+kd29	gsm8k=1.06 mmlu=24.46 arc_challenge=30.03	[lm-eval] DOWNSTREAM RETENTION: 67.1% (compressed 43.51 vs teacher 64.86)

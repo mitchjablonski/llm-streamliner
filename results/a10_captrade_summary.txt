@@ -1,0 +1,3 @@
+depth_only_d8	1543.7M -> 1216.1M depth=21 hidden=1536 gsm8k=0.0 mmlu=27.37 arc_challenge=33.5	[lm-eval] DOWNSTREAM RETENTION: 73.3% (compressed 47.22 vs teacher 64.38)
+wide_shallow	1543.7M -> 1075.8M depth=19 hidden=1472 gsm8k=0.0 mmlu=24.85 arc_challenge=26.0	[lm-eval] DOWNSTREAM RETENTION: 69.1% (compressed 44.49 vs teacher 64.38)
+narrow_deep	1543.7M -> 1157.8M depth=28 hidden=1152 gsm8k=1.0 mmlu=24.7 arc_challenge=31.0	[lm-eval] DOWNSTREAM RETENTION: 71.4% (compressed 45.97 vs teacher 64.38)

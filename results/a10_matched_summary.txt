@@ -1,0 +1,3 @@
+a_svd55_e15_d2	1543.7M -> 1065.7M	[lm-eval] DOWNSTREAM RETENTION: 73.0% (compressed 49.94 vs teacher 68.38)
+b_svd70_e15_d6	1543.7M -> 1070.1M	[lm-eval] DOWNSTREAM RETENTION: 75.7% (compressed 51.73 vs teacher 68.38)
+c_svd60_e25_d4	1543.7M -> 1146.1M	[lm-eval] DOWNSTREAM RETENTION: 77.9% (compressed 53.26 vs teacher 68.38)

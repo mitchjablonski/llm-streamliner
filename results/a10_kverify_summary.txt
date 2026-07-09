@@ -1,0 +1,5 @@
+zeroheal_ic	1235.8M -> 870.9M depth=10 hidden=2048	[lm-eval] DOWNSTREAM RETENTION: 57.4% (compressed 35.29 vs teacher 61.47)
+zeroheal	1235.8M -> 870.9M depth=10 hidden=2048	[lm-eval] DOWNSTREAM RETENTION: 52.3% (compressed 32.16 vs teacher 61.47)
+delheal	1235.8M -> 870.9M depth=10 hidden=2048	[lm-eval] DOWNSTREAM RETENTION: 73.5% (compressed 45.2 vs teacher 61.47)
+w1792_zero	[lm-eval] DOWNSTREAM RETENTION: 56.0% (compressed 34.43 vs teacher 61.47)
+w1920_d6	1235.8M -> 873.5M depth=11 hidden=1920	[lm-eval] DOWNSTREAM RETENTION: 73.3% (compressed 45.04 vs teacher 61.47)

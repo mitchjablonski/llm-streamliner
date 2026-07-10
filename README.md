@@ -34,6 +34,16 @@ The 88% headline is the surface-mean row. One aggregate "retention %" averages a
 
 `keep-full` block-replacement compression: keep attention/FFN internal dims full, prune residual-stream **width** by activation energy, delete depth cleanly, optional ReplaceMe-style closed-form splice. Then a **cheap** heal — ~30M tokens, `0.5·CE + 0.5·logit-KD(parent)`. Everything lives in [`src/`](src/) (`arch.py` is the operator zoo); [`scripts/run_generative.py`](scripts/run_generative.py) is the entry point with every lever as a flag.
 
+## Research arc
+
+The project began as an encoder-era co-compression study ([`docs/prior_work_co_compression.md`](docs/prior_work_co_compression.md) — 6 GLUE tasks × 2 architectures + GPT-2, developed entirely on an 8 GB RTX 3070). Three pieces of it remain load-bearing here:
+
+- **The mechanism.** *Depth is scarce and concentrated; FFN width is abundant and low-rank* (middle-span Block Influence 2.45× lower than outer layers; FFN 90%-energy in ≤41% of dims). The capability findings deepen this: depth turned out to be scarcest **for reasoning** — the axis whose removal kills gsm8k outright.
+- **The CBA** — a training-free Compression-Budget Allocator that *computes* the depth/width split from one calibration pass and Pareto-beats uniform pruning (95.5% retained at 61.9% reduction, zero search).
+- **The methodology.** Every "win" tested at convergence, multi-seed, and under generalization — which is how apparent wins (weight-tied recurrence, fusion modules, staged healing) were caught as artifacts then, and how the ~70-lever negative map (Appendix B) stayed honest now.
+
+Its aggregate retention numbers, however, are exactly the **surface-style metrics this write-up critiques** — read them with that lens.
+
 ## Install
 
 ```bash

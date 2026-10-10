@@ -125,7 +125,7 @@
     <div class="col">
       <div class="eyebrow">Empirical findings · Qwen2.5-1.5B · block-replacement + 30M-token heal</div>
       <h1>The retention number is telling you the truth about the wrong thing.</h1>
-      <p class="dek">At 17% compression it keeps 88% of the <strong>surface/completion</strong> benchmark average — the basket compression papers report — while its math reasoning is already destroyed.</p>
+      <p class="dek">At 17% compression it keeps 88% of the <strong>surface/completion</strong> benchmark average — a basket of the kind compression papers commonly report — while its GSM8K math score has already collapsed.</p>
 
       <div class="reveal">
         <div class="cell ok">
@@ -151,11 +151,11 @@
   <div class="col">
 
     <section>
-      <p class="lead">We compress a 1.5B language model with the standard cheap recipe — layer/width surgery plus a small (~30&nbsp;million-token) distillation heal — and it scores well by the usual measure. Then we split the benchmark into <strong>surface/completion</strong> tasks and <strong>reasoning/knowledge</strong> tasks. The aggregate hides a crater: surface competence survives; reasoning is annihilated. This report localizes the damage to a specific axis, proves the surgery (not the heal) causes it, and shows that no cheap operator, heal, or shape brings it back.</p>
+      <p class="lead">We compress a 1.5B language model with the standard cheap recipe — layer/width surgery plus a small (~30&nbsp;million-token) distillation heal — and it scores well by the usual measure. Then we split the benchmark into <strong>surface/completion</strong> tasks and <strong>reasoning/knowledge</strong> tasks. The aggregate hides a crater: surface competence survives while GSM8K and MMLU collapse. This case study localizes the loss across residual width and depth, tests candidate explanations (heal-induced forgetting, basis, heal objective, shape), and characterizes what the compressed models' confidence still tells you. Task-dependent collapse after layer removal was reported earlier — <a href="https://arxiv.org/abs/2403.03853">ShortGPT</a> (§4.6) shows near-zero GSM8K after removing 25% of layers — so the contribution here is the cheap-heal controls, the width/depth comparison and the confidence characterization, scoped to Qwen2.5-1.5B and this ~30M-token heal.</p>
     </section>
 
     <section>
-      <div class="kicker"><span class="mk">01</span><div class="eyebrow">The number that lies</div></div>
+      <div class="kicker"><span class="mk">01</span><div class="eyebrow">The aggregate number</div></div>
       <h2>Same model, two verdicts</h2>
       <p>A compressed model at 17% compression (residual width 1280), evaluated task-by-task against its teacher — the point where the surface mean is a healthy 88%. Read down the column: the model still finishes sentences and answers commonsense questions; it can no longer do arithmetic.</p>
       <div class="tbl-wrap">
@@ -197,28 +197,28 @@
 
   <div class="col">
     <section>
-      <p>And the earlier tempting split — "width kills math, depth kills knowledge" — is <em>too clean</em>. Removing depth at <em>full</em> width destroys math outright, and at matched parameters it does so <em>faster</em> than width. GSM8K is sequential arithmetic: cut the layers and the reasoning chain cannot complete, whatever the width.</p>
+      <p>And the earlier tempting split — "width kills math, depth kills knowledge" — is <em>too clean</em>. Removing depth at <em>full</em> width took GSM8K to zero, and at matched parameters depth removal hurt it <em>more</em> than width removal. One possible reading is that multi-step arithmetic depends on sequential computation across layers; these runs do not test that mechanism.</p>
 
       <div class="laws">
-        <div class="law s"><div class="t">Surface</div><div class="b">Completion &amp; commonsense tolerate <span class="hl">heavy compression on every axis</span>.</div></div>
-        <div class="law k"><div class="t">Knowledge</div><div class="b">MMLU needs <span class="hl">depth</span>; collapses at the depth-deletion cliff (28&rarr;25 layers &rarr; chance).</div></div>
-        <div class="law d"><div class="t">Reasoning</div><div class="b">Math needs the <span class="hl">near-full network</span> — width <em>and</em> depth — and is most fragile to depth.</div></div>
+        <div class="law s"><div class="t">Surface</div><div class="b">Completion &amp; commonsense held up under <span class="hl">heavy compression on every tested axis</span>.</div></div>
+        <div class="law k"><div class="t">Knowledge</div><div class="b">MMLU degraded with width and fell to chance at the <span class="hl">depth-deletion step</span> tested (28&rarr;25 layers).</div></div>
+        <div class="law d"><div class="t">Reasoning</div><div class="b">GSM8K degraded under <span class="hl">every tested width and depth cut</span>, fastest under depth. Observed patterns for this model, not general laws.</div></div>
       </div>
     </section>
 
     <section>
-      <div class="kicker"><span class="mk">03</span><div class="eyebrow">Causal isolation</div></div>
-      <h2>It's the cut — and nothing cheap undoes it</h2>
-      <p>Four controls, each removing one explanation. Together they close every cheap escape route: it is not the heal forgetting, not the wrong basis, not the wrong heal objective, and not the wrong shape.</p>
+      <div class="kicker"><span class="mk">03</span><div class="eyebrow">Testing explanations</div></div>
+      <h2>None of the tested cheap fixes restored it</h2>
+      <p>Four controls, each testing one explanation at this ~30M-token budget: heal-induced forgetting, the choice of basis, the heal objective, and the shape of the cut.</p>
 
       <div class="chain">
-        <div class="step"><span class="lab">Heal&nbsp;innocent</span><span class="txt">An <strong>uncut</strong> model put through the identical 30M-token heal keeps gsm8k <strong>59.3</strong> (teacher 61.7). Catastrophic forgetting is <em>not</em> the cause.<div class="r">forget · uncut+heal · gsm8k 59.3</div></span></div>
-        <div class="step"><span class="lab">Basis&nbsp;fails</span><span class="txt">Every residual reshape at 17% — channel-protection, SliceGPT rotation, low-rank capture — lands gsm8k at <strong>2–4</strong>. It's dimensionality, not basis.<div class="r">reshape · protect 3.3 / rotate 2.3 / capture 3.0</div></span></div>
-        <div class="step"><span class="lab">Heal&nbsp;fails</span><span class="txt">Pure distillation toward the intact parent (the textbook forgetting fix), even with math data, does nothing for math: <strong>4.2 / 8.5</strong>.<div class="r">recover · pure-KD 4.2 · +math 8.5</div></span></div>
+        <div class="step"><span class="lab">Uncut&nbsp;heal</span><span class="txt">An <strong>uncut</strong> model put through the identical 30M-token heal keeps gsm8k <strong>59.3</strong> (teacher 61.7). This argues against heal-induced forgetting <em>alone</em>; it does not isolate every surgery-by-heal interaction.<div class="r">forget · uncut+heal · gsm8k 59.3</div></span></div>
+        <div class="step"><span class="lab">Basis&nbsp;fails</span><span class="txt">Every residual reshape at 17% — channel-protection, SliceGPT rotation, low-rank capture — lands gsm8k at <strong>2–4</strong>. A different basis did not help in these tests.<div class="r">reshape · protect 3.3 / rotate 2.3 / capture 3.0</div></span></div>
+        <div class="step"><span class="lab">Heal&nbsp;fails</span><span class="txt">Pure distillation toward the intact parent (the textbook forgetting fix) reaches <strong>4.2</strong>, or <strong>8.5</strong> with a math-data mix — an improvement, far from the 61.7 baseline.<div class="r">recover · pure-KD 4.2 · +math 8.5</div></span></div>
         <div class="step"><span class="lab">Shape&nbsp;fails</span><span class="txt">At ~30% compression, <em>no</em> allocation of the cut saves reasoning — wide-shallow, narrow-deep, depth-only all land at <strong>0–1</strong>.<div class="r">captrade · 0.0 / 1.0 / 0.0</div></span></div>
       </div>
 
-      <p class="verdict">Reasoning is not forgotten by the heal or hidden in the wrong basis. The surgery structurally removes it, and no cheap operator, objective, or shape rebuilds what was deleted.</p>
+      <p class="verdict">At this budget, none of the tested reshapes, heal objectives or shapes restored baseline GSM8K. That is a statement about these controls, not proof that the capability is unrecoverable.</p>
     </section>
 
     <section>
@@ -237,17 +237,45 @@
       </div>
     </section>
 
+    <section>
+      <div class="kicker"><span class="mk">05</span><div class="eyebrow">Measurement checks</div></div>
+      <h2>Not explained by the tested scoring effects</h2>
+      <p>A collapse this large invites measurement objections. We rebuilt the 17% and 32% checkpoints with the identical recipe (reproducing the originals: cp29 MMLU 22.99 vs 23.0) and re-scored them with per-sample logging. Scope: Qwen2.5-1.5B, this surgery and ~30M-token heal, these tasks.</p>
+
+      <div class="chain">
+        <div class="step"><span class="lab">Format</span><span class="txt">gsm8k is <strong>identical</strong> under strict (<code>#### N</code>) and flexible (last number) extraction: teacher 61.5 / 61.5, 17% 4.0 / 4.0, 32% 1.5 / 1.5. The 17% model keeps the format and gets the arithmetic wrong.<div class="r">strict = flexible · 200 problems</div></span></div>
+        <div class="step"><span class="lab">Below&nbsp;chance</span><span class="txt">The 32% model answers <strong>"A" on 98%</strong> of MMLU items — its 23% is exactly the share of A answers. Removing the letter preference leaves <strong>25.1</strong>: chance.<div class="r">letter-debiased · holdout half · AUROC 0.51</div></span></div>
+        <div class="step"><span class="lab">Hidden?</span><span class="txt">A linear probe on frozen hidden states tracks zero-shot accuracy for every model; at 32% the tested probes reach <strong>27.8</strong> vs <strong>25.7</strong> for a random-init Qwen2.5-0.5B control (not shape-matched; ± values are fold spreads, not a significance test). They do not recover teacher-like accuracy; this is not proof of erasure.<div class="r">probe · teacher 55.0 · 17% 36.9 · 32% 27.8</div></span></div>
+      </div>
+
+      <h3>And the model stops knowing what it got wrong</h3>
+      <p>If a compressed model's confidence still separated right from wrong answers, hard inputs could be escalated back to the parent. On MMLU, that signal degrades with compression and is near-gone at the deeper cut:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th scope="col">MMLU</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">AUROC</th><th scope="col" class="num">ECE</th><th scope="col" class="num">Escalated to stay within 1 pt</th></tr></thead>
+          <tbody>
+            <tr><td>teacher</td><td class="num">59.7</td><td class="num">0.78</td><td class="num">8.6</td><td class="num">—</td></tr>
+            <tr><td>17% (cp17)</td><td class="num">36.1</td><td class="num">0.62</td><td class="num">4.0</td><td class="num">92%</td></tr>
+            <tr><td>32% (cp29)</td><td class="num">23.0</td><td class="num dead">0.51</td><td class="num dead">32.6</td><td class="num dead">98%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="verdict">In this setting, compression removed a capability <em>and</em> degraded the model's ability to signal the loss. AUROC 0.5 = confidence carries no information; the escalation figures are MMLU at a within-1-point target, not a general cascade result.</p>
+    </section>
+
     <hr class="rule">
 
     <section>
-      <div class="kicker"><span class="mk">05</span><div class="eyebrow">What it means</div></div>
+      <div class="kicker"><span class="mk">06</span><div class="eyebrow">What it means</div></div>
       <h2>Consequences</h2>
       <h3>Report capability-stratified evals</h3>
-      <p>A structured-compression result without gsm8k and MMLU is uninterpretable — the aggregate hides whether reasoning survived. This reframes existing "retention %" numbers across the literature as <em>surface-task</em> numbers.</p>
-      <h3>Cheap reasoning-preserving compression tops out at ~4–8%</h3>
-      <p>At 1.5B, by any shape. Below that, math is gone and no cheap operator or heal returns it. A 16-lever operator search and a saturated distillation sweep (loss, data, teacher, MTP, focus) confirm there is no cheap exception.</p>
-      <h3>The path forward is source scale, not a better operator</h3>
-      <p>Native-1.5B (width 1536, 28 layers) reasons fine, so the width and depth it occupies are <em>sufficient</em>. Compressing a <strong>bigger source</strong> — 3B → 1.5B — lands at an absolute geometry the 1.5B budget already proves is reasoning-capable, if the thresholds are absolute rather than relative. That is the one remaining experiment that could move the top line.</p>
+      <p>A structured-compression result without gsm8k and MMLU is uninterpretable — the aggregate hides whether reasoning survived. An eight-task surface average alone should not be read as reasoning or knowledge retention.</p>
+      <h3>Re-measure calibration after compressing</h3>
+      <p>A compressed model should not inherit the parent's confidence thresholds, abstention rules or escalation policies. Confidence can degrade alongside the capability, so any confidence-based safeguard has to be re-validated on the compressed model itself.</p>
+      <h3>In our tests, no shape preserved GSM8K beyond small cuts</h3>
+      <p>A ~4% residual-width cut already drops GSM8K from 61.7 to 42.5; at ~30% every tested allocation lands at 0–1, and no tested operator or heal objective at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.</p>
+      <h3>Open hypothesis: source scale</h3>
+      <p>Native-1.5B (width 1536, 28 layers) reasons fine, so that geometry can support the capability when trained directly. Whether compressing a <strong>bigger source</strong> (3B → 1.5B) preserves more of it is an untested hypothesis; it would hold only if the thresholds are absolute rather than relative to the source.</p>
     </section>
 
     <footer>
@@ -255,7 +283,8 @@
         MODEL &nbsp;Qwen2.5-1.5B · 28L · hidden 1536 · 1543.7M<br>
         HEAL &nbsp;~30M tokens C4 · 0.5·CE + 0.5·logit-KD(parent) · fixed cheap budget<br>
         EVAL &nbsp;lm-eval-harness · surface {lambada, hellaswag, arc-e, piqa, winogrande, boolq, sciq, openbookqa} · hard {gsm8k 5-shot, MMLU, arc-c}<br>
-        DATA &nbsp;82 run summaries + 454 logs · cloud_results/a10_final/ · every number traced to a pulled summary<br>
+        DATA &nbsp;82 run summaries in results/ · every number traced to a run summary<br>
+        CHECKS &nbsp;Sep 2026 rebuild of cp17/cp29 · results/a10_calib_summary.txt, results/calib_summary_v2.md (strict/flexible, letter bias, calibration, cascade) · probe: results/a10_probe_summary.txt<br>
         SCOPE &nbsp;single family / single scale · cross-family crater check &amp; 3B→1.5B are the open follow-ups
       </p>
     </footer>

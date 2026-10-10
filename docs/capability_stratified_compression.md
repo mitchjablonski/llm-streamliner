@@ -288,7 +288,8 @@ the companion [`prior_work_co_compression.md`](prior_work_co_compression.md).
 
 §6.5–6.6 (September 2026 rebuild of cp17/cp29 with the identical recipe): `results/a10_calib_summary.txt` and
 `results/calib_summary_v2.md` (per-task accuracy, ECE, AUROC, strict/flexible gsm8k, letter bias, holdout cascade),
-produced by `scripts/calib_eval.py` and `scripts/calib_compare.py`; the linear probe by `scripts/mmlu_probe.py`
+produced by `scripts/calib_eval.py` and `scripts/calib_compare.py`; the letter-debias table by `scripts/letter_debias.py`
+(`results/a10_letter_debias_summary.txt`); the linear probe by `scripts/mmlu_probe.py`
 (`results/a10_probe_summary.txt`; layer accuracies ± fold spread).
 ---
 

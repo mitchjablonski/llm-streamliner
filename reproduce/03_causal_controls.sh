@@ -2,7 +2,7 @@
 # CAUSAL CONTROLS — is reasoning killed by the CUT or by the HEAL?
 #
 # (A) forget control: an UNCUT model put through the identical 30M-token heal.
-#     If reasoning survives here, the heal is innocent and the surgery is the cause.
+#     If reasoning survives here, heal-induced forgetting alone does not explain the cut model's loss.
 #     Expected: gsm8k ~59 (teacher 61.7). See results/a10_forget_summary.txt.
 #
 # (B) reshape control: at the same 17% width compression, protect the residual channels

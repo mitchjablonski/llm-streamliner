@@ -215,7 +215,7 @@
         <div class="step"><span class="lab">Uncut&nbsp;heal</span><span class="txt">An <strong>uncut</strong> model put through the identical 30M-token heal keeps gsm8k <strong>59.3</strong> (teacher 61.7). This argues against heal-induced forgetting <em>alone</em>; it does not isolate every surgery-by-heal interaction.<div class="r">forget · uncut+heal · gsm8k 59.3</div></span></div>
         <div class="step"><span class="lab">Basis&nbsp;fails</span><span class="txt">Every residual reshape at 17% — channel-protection, SliceGPT rotation, low-rank capture — lands gsm8k at <strong>2–4</strong>. A different basis did not help in these tests.<div class="r">reshape · protect 3.3 / rotate 2.3 / capture 3.0</div></span></div>
         <div class="step"><span class="lab">Heal&nbsp;fails</span><span class="txt">Pure distillation toward the intact parent (the textbook forgetting fix) reaches <strong>4.2</strong>, or <strong>8.5</strong> with a math-data mix — an improvement, far from the 61.7 baseline.<div class="r">recover · pure-KD 4.2 · +math 8.5</div></span></div>
-        <div class="step"><span class="lab">Shape&nbsp;fails</span><span class="txt">At ~30% compression, <em>no</em> allocation of the cut saves reasoning — wide-shallow, narrow-deep, depth-only all land at <strong>0–1</strong>.<div class="r">captrade · 0.0 / 1.0 / 0.0</div></span></div>
+        <div class="step"><span class="lab">Shape&nbsp;fails</span><span class="txt">Three allocations of a 21–30% cut (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3%; not size-matched) all land at <strong>0–1</strong>.<div class="r">captrade · 0.0 / 1.0 / 0.0</div></span></div>
       </div>
 
       <p class="verdict">At this budget, none of the tested reshapes, heal objectives or shapes restored baseline GSM8K. That is a statement about these controls, not proof that the capability is unrecoverable.</p>
@@ -227,11 +227,11 @@
       <p>If reasoning survived <em>some</em> geometry, the aspect ratio would be a lever. It isn't — though the margin does confirm depth is slightly more critical, which is exactly why native small models are built narrower-and-deeper: they protect the critical axis and re-learn narrow-width reasoning from scratch, which post-hoc compression cannot do.</p>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th scope="col">Shape (~1.1B, ~30% compression)</th><th scope="col" class="num">Width</th><th scope="col" class="num">Depth</th><th scope="col" class="num">gsm8k</th></tr></thead>
+          <thead><tr><th scope="col">Shape</th><th scope="col" class="num">Params (reduction)</th><th scope="col" class="num">Width</th><th scope="col" class="num">Depth</th><th scope="col" class="num">gsm8k</th></tr></thead>
           <tbody>
-            <tr><td>wide-shallow</td><td class="num">1472</td><td class="num">19</td><td class="num dead">0.0</td></tr>
-            <tr><td>narrow-deep</td><td class="num">1152</td><td class="num">28</td><td class="num dead">1.0</td></tr>
-            <tr><td>depth-only</td><td class="num">1536</td><td class="num">21</td><td class="num dead">0.0</td></tr>
+            <tr><td>depth-only</td><td class="num">1216.1M (21.2%)</td><td class="num">1536</td><td class="num">21</td><td class="num dead">0.0</td></tr>
+            <tr><td>narrow-deep</td><td class="num">1157.8M (25.0%)</td><td class="num">1152</td><td class="num">28</td><td class="num dead">1.0</td></tr>
+            <tr><td>wide-shallow</td><td class="num">1075.8M (30.3%)</td><td class="num">1472</td><td class="num">19</td><td class="num dead">0.0</td></tr>
           </tbody>
         </table>
       </div>
@@ -252,15 +252,15 @@
       <p>If a compressed model's confidence still separated right from wrong answers, hard inputs could be escalated back to the parent. On MMLU, that signal degrades with compression and is near-gone at the deeper cut:</p>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th scope="col">MMLU</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">AUROC</th><th scope="col" class="num">ECE</th><th scope="col" class="num">Escalated to stay within 1 pt</th></tr></thead>
+          <thead><tr><th scope="col">MMLU</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">AUROC</th><th scope="col" class="num">ECE</th><th scope="col" class="num">Escalated (holdout)</th><th scope="col" class="num">Cascade acc (holdout)</th></tr></thead>
           <tbody>
-            <tr><td>teacher</td><td class="num">59.7</td><td class="num">0.78</td><td class="num">8.6</td><td class="num">—</td></tr>
-            <tr><td>17% (cp17)</td><td class="num">36.1</td><td class="num">0.62</td><td class="num">4.0</td><td class="num">92%</td></tr>
-            <tr><td>32% (cp29)</td><td class="num">23.0</td><td class="num dead">0.51</td><td class="num dead">32.6</td><td class="num dead">98%</td></tr>
+            <tr><td>teacher</td><td class="num">59.7</td><td class="num">0.78</td><td class="num">8.6</td><td class="num">—</td><td class="num">59.9</td></tr>
+            <tr><td>17% (cp17)</td><td class="num">36.1</td><td class="num">0.62</td><td class="num">4.0</td><td class="num">92%</td><td class="num">59.1</td></tr>
+            <tr><td>32% (cp29)</td><td class="num">23.0</td><td class="num dead">0.51</td><td class="num dead">32.6</td><td class="num dead">98%</td><td class="num">58.8</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="verdict">In this setting, compression removed a capability <em>and</em> degraded the model's ability to signal the loss. AUROC 0.5 = confidence carries no information; the escalation figures are MMLU at a within-1-point target, not a general cascade result.</p>
+      <p class="verdict">In this setting, compression removed a capability <em>and</em> degraded the model's ability to signal the loss. AUROC 0.5 = confidence carries no information; the escalation threshold targets staying within 1 point of the teacher (chosen on one half, applied to the other); on the holdout the cascade ends 0.8–1.1 points below, so the target is not guaranteed. MMLU only, not a general cascade result.</p>
     </section>
 
     <hr class="rule">
@@ -273,7 +273,7 @@
       <h3>Re-measure calibration after compressing</h3>
       <p>A compressed model should not inherit the parent's confidence thresholds, abstention rules or escalation policies. Confidence can degrade alongside the capability, so any confidence-based safeguard has to be re-validated on the compressed model itself.</p>
       <h3>In our tests, no shape preserved GSM8K beyond small cuts</h3>
-      <p>A ~4% residual-width cut already drops GSM8K from 61.7 to 42.5; at ~30% every tested allocation lands at 0–1, and no tested operator or heal objective at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.</p>
+      <p>A ~4% residual-width cut already drops GSM8K from 61.7 to 42.5; three allocations of a 21–30% cut all land at 0–1, and no tested operator or heal objective at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.</p>
       <h3>Open hypothesis: source scale</h3>
       <p>Native-1.5B (width 1536, 28 layers) reasons fine, so that geometry can support the capability when trained directly. Whether compressing a <strong>bigger source</strong> (3B → 1.5B) preserves more of it is an untested hypothesis; it would hold only if the thresholds are absolute rather than relative to the source.</p>
     </section>

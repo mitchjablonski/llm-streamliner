@@ -8,7 +8,7 @@
 
 Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~30M-token) distillation heal — recovers **88% of the 8-task surface/completion benchmark average at 17% compression** and looks strong by the usual aggregate "retention %" metric. "Benchmark average" here is the mean over `{lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa}` (teacher 68.4 → 60.4 = 88.3%) — a basket of the kind structured-compression papers commonly report. **This eight-task average does not establish GSM8K or MMLU retention.** At the *same* 17% cut, multi-step math has already *collapsed* (gsm8k 61.7 → 3.6, 6% retained) while knowledge is degrading (MMLU 59.6 → 36.0, 60%); deepen to 32% (adding depth deletion) and MMLU too collapses to near chance (→ 23) and gsm8k to ~1. Stratifying the eval into surface/completion vs. reasoning/knowledge tasks exposes a **capability crater** that the aggregate hides.
 
-We then localize the loss and test candidate explanations. **In the tested shapes, GSM8K degrades under both residual-width and depth cuts:** continuously with width (gsm8k roughly halves every 64 residual channels removed) and faster with depth removal. Putting an *uncut* model through the identical heal keeps gsm8k at 59.3, which argues against heal-induced forgetting alone as the cause (it does not isolate every surgery-by-heal interaction). At this budget, none of the tested residual reshapes (channel selection, rotation, low-rank capture) or heal objectives (pure-KD, math-data mix, MTP, focus) restored baseline gsm8k; the best, pure-KD with a math-data mix, reached 8.5 (from 4.2) against a 61.7 baseline. At ~30% compression, **no allocation of the cut** — wide-shallow, narrow-deep, or balanced — preserves reasoning. The loss is not explained by the answer-extraction and letter-bias effects we tested (§6.5): gsm8k is identical under strict and flexible extraction on 200 problems, the below-chance MMLU score is letter collapse over chance-level accuracy, and the tested linear probes do not recover teacher-like accuracy. Compression also degrades the model's *calibration* (§6.6): at 32% its MMLU confidence no longer separates right from wrong answers (AUROC 0.51), and a cascade held within 1 point of the teacher on MMLU must escalate 92–98% of items.
+We then localize the loss and test candidate explanations. **In the tested shapes, GSM8K degrades under both residual-width and depth cuts:** continuously with width (gsm8k roughly halves every 64 residual channels removed) and faster with depth removal. Putting an *uncut* model through the identical heal keeps gsm8k at 59.3, which argues against heal-induced forgetting alone as the cause (it does not isolate every surgery-by-heal interaction). At this budget, none of the tested residual reshapes (channel selection, rotation, low-rank capture) or heal objectives (pure-KD, math-data mix, MTP, focus) restored baseline gsm8k; the best, pure-KD with a math-data mix, reached 8.5 (from 4.2) against a 61.7 baseline. **None of the three tested allocations of a 21–30% cut** (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3% parameter reduction) preserved gsm8k; they are not matched in size, so they compare shapes only loosely. The loss is not explained by the answer-extraction and letter-bias effects we tested (§6.5): gsm8k is identical under strict and flexible extraction on 200 problems, the below-chance MMLU score is letter collapse over chance-level accuracy, and the tested linear probes do not recover teacher-like accuracy. Compression also degrades the model's *calibration* (§6.6): at 32% its MMLU confidence no longer separates right from wrong answers (AUROC 0.51), and a cascade whose escalation threshold targets staying within 1 point of the teacher on MMLU escalates 92–98% of holdout items, ending 0.8–1.1 points below the teacher.
 
 The practical consequence: an average over surface/completion tasks is not evidence that a compressed model retains reasoning or knowledge, so compression results should report those capabilities directly. In our tests at 1.5B, no tested shape kept gsm8k near baseline beyond small cuts (a ~4% width cut already drops it from 61.7 to 42.5); whether compressing a larger source model avoids this is an open hypothesis. Task-dependent collapse after layer removal has been reported before — ShortGPT ([Men et al., 2024](https://arxiv.org/abs/2403.03853), §4.6) shows near-zero GSM8K and HumanEval after removing 25% of layers — so the contribution here is not the discovery of the collapse but the cheap-heal controls, the residual-width versus depth comparison, and the confidence/cascade characterization in this setting.
 
@@ -107,14 +107,14 @@ gsm8k roughly **halves for every ~64 residual channels removed**. There is no "s
 
 ### 5.2 Depth kills reasoning *too* — and faster
 
-The earlier "width→math, depth→knowledge" split was **too clean**. Cutting depth at *full* width destroys math outright:
+The earlier "width→math, depth→knowledge" split was **too clean**. Cutting depth at *full* width (28 → 21 layers, 1216.1M parameters, 21.2% reduction) took gsm8k to zero:
 
-| shape (~1.2B, ~30% compression) | width | depth | gsm8k | MMLU |
-|---|---|---|---|---|
-| depth-only −8L | 1536 | 21 | **0.0** | 27.4 |
-| — vs width-cut to ~1216M | ~1216 | 28 | ~6 (interp.) | ~34 |
+| shape | params (reduction) | width | depth | gsm8k | MMLU |
+|---|---|---|---|---|---|
+| depth-only (7 layers removed) | 1216.1M (21.2%) | 1536 | 21 | **0.0** | 27.4 |
+| width-only at a similar size (interpolated from §5.1, not run) | ~1216M | ~1216 | 28 | ~6 | ~34 |
 
-At matched parameters, **depth removal was *more* damaging to gsm8k than width removal** in these runs. One possible reading is that multi-step arithmetic depends on sequential computation across layers, but these runs do not test that mechanism. *(captrade runs use eval_limit=200; the effect size (0 vs 60) dwarfs the sampling noise.)*
+At a similar parameter count, **depth removal was *more* damaging to gsm8k than the interpolated width-only point** in these runs. One possible reading is that multi-step arithmetic depends on sequential computation across layers, but these runs do not test that mechanism. *(captrade runs use eval_limit=200; the effect size (0 vs 60) dwarfs the sampling noise.)*
 
 ### 5.3 The knowledge cliff
 
@@ -163,17 +163,17 @@ If reasoning lived in a *recoverable subspace*, a smarter residual reshape at th
 
 Pure distillation toward the intact parent — the textbook forgetting fix — nudges MMLU slightly (36→38) and barely moves gsm8k: 4.2, or 8.5 with a math-data mix. That is an improvement, but far from the 61.7 baseline at this budget. (Also tested and null on the hard basket: MTP / MTP-KD, longer-context heal, teacher-hard-example mining, focused-KD.)
 
-### 6.4 No *shape* preserves reasoning at real compression (`captrade`)
+### 6.4 Allocating a 21–30% cut differently (`captrade`)
 
-At ~30% compression, does *allocating* the cut differently save reasoning?
+Three allocations of the cut, at different sizes (from `results/a10_captrade_summary.txt`; teacher 1543.7M):
 
-| shape (~1.1B) | width | depth | gsm8k |
-|---|---|---|---|
-| wide-shallow | 1472 | 19 | 0.0 |
-| narrow-deep | 1152 | 28 | 1.0 |
-| depth-only | 1536 | 21 | 0.0 |
+| shape | params (reduction) | width | depth | gsm8k |
+|---|---|---|---|---|
+| depth-only | 1216.1M (21.2%) | 1536 | 21 | 0.0 |
+| narrow-deep | 1157.8M (25.0%) | 1152 | 28 | 1.0 |
+| wide-shallow | 1075.8M (30.3%) | 1472 | 19 | 0.0 |
 
-**No.** Every allocation lands at 0–1. narrow-deep is *marginally* best (1.0 vs 0.0), a directional confirmation that depth is slightly more critical — which also explains why **native small models are narrower-and-deeper**: they protect the critical axis (depth), cut width, and re-learn the narrow-width reasoning *from scratch*, which post-hoc compression cannot do.
+Every tested allocation lands at 0–1 on gsm8k (eval limit 200, so 1.0 vs 0.0 is two problems and not a meaningful difference). The shapes differ in size, so this is a loose comparison of allocations, not a matched one; it shows only that none of these three preserved gsm8k.
 
 ### 6.5 Measurement checks: answer extraction, letter bias, linear probes
 
@@ -222,7 +222,7 @@ If a compressed model at least *knew* when it was out of its depth, its confiden
 | cp17 (17%) | 36.1 | 0.62 | 4.0 | 0.41 / 0.37 |
 | cp29 (32%) | 23.0 | **0.51** | 32.6 | 0.56 / 0.56 |
 
-Confidence degrades with compression and is **near-uninformative at the deeper cut**: cp29 is equally confident on its right and wrong answers, and badly overconfident (ECE 32.6). cp17 is degraded but still informative. In a holdout cascade (escalation threshold chosen on one half, applied to the other) that must stay within 1 point of the teacher **on MMLU**, cp17 escalates 92% of items and cp29 98% — little saving. This is an MMLU result at that target, not a general statement about cascades; on surface tasks the picture is milder (BoolQ AUROC teacher 0.70, cp17 0.63, cp29 0.55).
+Confidence degrades with compression and is **near-uninformative at the deeper cut**: cp29 is equally confident on its right and wrong answers, and badly overconfident (ECE 32.6). cp17 is degraded but still informative. In a holdout cascade **on MMLU**, the escalation threshold is chosen on one half of the items to keep the cascade within 1 point of the teacher, then applied unchanged to the other half. There, cp17 escalates 92% of items and reaches 59.1, and cp29 escalates 98% and reaches 58.8, against the teacher's 59.9 (0.8 and 1.1 points below). The 1-point target is not guaranteed on the holdout half, and the saving is small either way. This is an MMLU result at that target, not a general statement about cascades; on surface tasks the picture is milder (BoolQ AUROC teacher 0.70, cp17 0.63, cp29 0.55).
 
 The practical point extends §4: in this setting, compression removed a capability **and** degraded the model's ability to signal that it had lost it, so confidence-based safeguards cannot be assumed to survive compression and must be re-measured. (For scale: a *native* Qwen2.5-0.5B — 494M parameters, under half of cp29's 1052M — scores MMLU 47.5 with AUROC 0.71 and gsm8k 26.5 on the same harness.)
 
@@ -259,7 +259,7 @@ So the scaling evidence is a **caution, not a promise**, for the source-scale hy
 
 1. **Report capability-stratified evals.** A structured-compression result without gsm8k/MMLU is uninterpretable — the aggregate hides whether reasoning survived. An eight-task surface average alone should not be read as reasoning or knowledge retention. Report generative tasks under both strict and flexible extraction, and check multiple-choice tasks for answer-letter collapse before reading a below-chance score.
 1b. **Re-measure calibration after compression.** Confidence can degrade alongside the capability (§6.6); a compressed model should not inherit the parent's confidence thresholds, abstention rules, or escalation policies without re-validation.
-2. **In our tests, no shape preserved gsm8k beyond small cuts.** A ~4% residual-width cut already drops it from 61.7 to 42.5 and a 12.5% cut to 9.3; at ~30% every tested allocation lands at 0–1, and no tested operator or heal at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.
+2. **In our tests, no shape preserved gsm8k beyond small cuts.** A ~4% residual-width cut already drops it from 61.7 to 42.5 and a 12.5% cut to 9.3; the three tested allocations of a 21–30% cut (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3%) all land at 0–1, and no tested operator or heal at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.
 3. **The most promising remaining lever is source scale — but it is a hypothesis, not a result.** Native-1.5B (width 1536, 28L) reasons fine, so that absolute geometry is reasoning-capable; compressing a *bigger* source (3B: width 2048, 36L) toward it *might* land above the reasoning thresholds — **if** they are absolute rather than relative, and **if** reasoning benefits from scale where surface (§8) has saturated. Neither is established. This is the **H100 3B→1.5B experiment** (`scripts/h100_bigteach_3b15b.sh`, rewritten as a compression-ratio sweep with hard-basket evals from the start): the one run that could turn the negative story into a positive one — or confirm the wall holds at scale.
 
 ---
@@ -290,7 +290,9 @@ the companion [`prior_work_co_compression.md`](prior_work_co_compression.md).
 `results/calib_summary_v2.md` (per-task accuracy, ECE, AUROC, strict/flexible gsm8k, letter bias, holdout cascade),
 produced by `scripts/calib_eval.py` and `scripts/calib_compare.py`; the letter-debias table by `scripts/letter_debias.py`
 (`results/a10_letter_debias_summary.txt`); the linear probe by `scripts/mmlu_probe.py`
-(`results/a10_probe_summary.txt`; layer accuracies ± fold spread).
+(`results/a10_probe_summary.txt`; layer accuracies ± fold spread). AUROC/ECE values are recomputed with tie-corrected ranks from the shipped
+per-sample outputs (`results/calib_per_sample/`, `scripts/recompute_calib.py` → `results/a10_calib_metrics_recomputed.txt`);
+the correction changed no reported value at the precision shown.
 ---
 
 ## Appendix B: The full negative map (~70 levers)

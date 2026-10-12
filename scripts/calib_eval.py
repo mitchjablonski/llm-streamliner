@@ -53,7 +53,17 @@ def auroc(conf, correct):
     pos, neg = conf[correct], conf[~correct]
     if len(pos) == 0 or len(neg) == 0:
         return float("nan")
-    ranks = np.argsort(np.argsort(np.concatenate([pos, neg]))) + 1.0   # ties are rare with float probs
+    allv = np.concatenate([pos, neg]).astype(float)
+    order = np.argsort(allv, kind="mergesort")
+    ranks = np.empty(len(allv))
+    sv = allv[order]
+    i = 0
+    while i < len(sv):                       # AVERAGE ranks for ties (Mann-Whitney U); distinct ranks for tied
+        j = i                                # scores biased AUROC (Sol review of PR #1: [.5]*4 gave 0.0, not 0.5)
+        while j + 1 < len(sv) and sv[j + 1] == sv[i]:
+            j += 1
+        ranks[order[i:j + 1]] = (i + j) / 2 + 1
+        i = j + 1
     return float((ranks[: len(pos)].sum() - len(pos) * (len(pos) + 1) / 2) / (len(pos) * len(neg)))
 
 

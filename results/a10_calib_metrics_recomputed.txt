@@ -1,0 +1,19 @@
+# §6.5–6.6 calibration metrics RECOMPUTED from results/calib_per_sample/ with the tie-corrected AUROC
+# (average ranks; PR #1 review). Supersedes the AUROC/ECE columns of a10_calib_summary.txt (the original run log).
+model    task                n    acc    ECE   AUROC  conf_R  conf_W  | raw:   acc   ECE  AUROC
+teacher  mmlu            14042  59.67   8.55  0.7798   0.770   0.552  |     59.67  8.55 0.7798
+teacher  arc_challenge    1172  45.14  14.76  0.5464   0.314   0.305  |     41.13 38.42  0.588
+teacher  arc_easy         2376  71.84  38.18  0.6673   0.347   0.310  |     75.42  9.67  0.725
+teacher  boolq            3270  72.81   1.79  0.7006   0.758   0.663  |     72.81  1.79 0.7006
+teacher  piqa             1838  76.12  23.03  0.5436   0.531   0.530  |     75.68 18.04 0.5981
+cp17     mmlu            14042  36.09   4.04  0.6204   0.410   0.370  |     36.09  4.04 0.6204
+cp17     arc_challenge    1172  34.04   4.23   0.537   0.312   0.306  |     32.85 46.15 0.5189
+cp17     arc_easy         2376  61.49  28.38  0.6378   0.343   0.312  |     66.58  16.2 0.6793
+cp17     boolq            3270  66.36   8.51   0.634   0.765   0.704  |     66.36  8.51  0.634
+cp17     piqa             1838  71.06  18.49  0.5235   0.529   0.530  |      70.4 22.07  0.577
+cp29     mmlu            14042  22.99  32.61  0.5099   0.559   0.555  |     22.99 32.61 0.5099
+cp29     arc_challenge    1172  28.75   3.95  0.4831   0.309   0.315  |     27.56 51.34 0.4647
+cp29     arc_easy         2376   53.7  20.47  0.5615   0.340   0.325  |     61.24  19.1 0.6461
+cp29     boolq            3270  61.28  11.28  0.5455   0.733   0.715  |     61.28 11.28 0.5455
+cp29     piqa             1838  68.23  15.92  0.5294   0.528   0.528  |     68.88  23.2 0.5465
+RECOMPUTE DONE -> /tmp/claude-1000/-mnt-c-Users-mitch-Documents-Development-LLM-Streamliner/6a978958-3a9a-4274-8424-e69d6619b12a/scratchpad/recalc

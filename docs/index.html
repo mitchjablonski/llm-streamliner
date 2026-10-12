@@ -197,12 +197,12 @@
 
   <div class="col">
     <section>
-      <p>And the earlier tempting split — "width kills math, depth kills knowledge" — is <em>too clean</em>. Removing depth at <em>full</em> width took GSM8K to zero, and at matched parameters depth removal hurt it <em>more</em> than width removal. One possible reading is that multi-step arithmetic depends on sequential computation across layers; these runs do not test that mechanism.</p>
+      <p>And the earlier tempting split — "width kills math, depth kills knowledge" — is <em>too clean</em>. Removing depth at <em>full</em> width (28 → 21 layers) took GSM8K to zero. No width-only run exists at a matching size (the width sweep stops at 1280), so these runs do not show whether depth or width removal is more damaging at matched parameters.</p>
 
       <div class="laws">
         <div class="law s"><div class="t">Surface</div><div class="b">Completion &amp; commonsense held up under <span class="hl">heavy compression on every tested axis</span>.</div></div>
         <div class="law k"><div class="t">Knowledge</div><div class="b">MMLU degraded with width and fell to chance at the <span class="hl">depth-deletion step</span> tested (28&rarr;25 layers).</div></div>
-        <div class="law d"><div class="t">Reasoning</div><div class="b">GSM8K degraded under <span class="hl">every tested width and depth cut</span>, fastest under depth. Observed patterns for this model, not general laws.</div></div>
+        <div class="law d"><div class="t">Reasoning</div><div class="b">GSM8K degraded under <span class="hl">every tested width and depth cut</span>, reaching zero under a 7-layer depth-only cut. Observed patterns for this model, not general laws.</div></div>
       </div>
     </section>
 
@@ -224,7 +224,7 @@
     <section>
       <div class="kicker"><span class="mk">04</span><div class="eyebrow">No shape escapes</div></div>
       <h2>Reallocating the cut doesn't help</h2>
-      <p>If reasoning survived <em>some</em> geometry, the aspect ratio would be a lever. It isn't — though the margin does confirm depth is slightly more critical, which is exactly why native small models are built narrower-and-deeper: they protect the critical axis and re-learn narrow-width reasoning from scratch, which post-hoc compression cannot do.</p>
+      <p>The three allocations differ in size (21.2%, 25.0% and 30.3% parameter reduction), and narrow-deep's 1.0 versus 0.0 is 2 versus 0 correct of 200 problems. None of these three shapes preserved GSM8K. These runs establish neither an architectural mechanism nor that compression in general cannot preserve it.</p>
       <div class="tbl-wrap">
         <table>
           <thead><tr><th scope="col">Shape</th><th scope="col" class="num">Params (reduction)</th><th scope="col" class="num">Width</th><th scope="col" class="num">Depth</th><th scope="col" class="num">gsm8k</th></tr></thead>

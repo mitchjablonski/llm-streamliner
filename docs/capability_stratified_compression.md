@@ -8,7 +8,7 @@
 
 Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~30M-token) distillation heal — recovers **88% of the 8-task surface/completion benchmark average at 17% compression** and looks strong by the usual aggregate "retention %" metric. "Benchmark average" here is the mean over `{lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa}` (teacher 68.4 → 60.4 = 88.3%) — a basket of the kind structured-compression papers commonly report. **This eight-task average does not establish GSM8K or MMLU retention.** At the *same* 17% cut, multi-step math has already *collapsed* (gsm8k 61.7 → 3.6, 6% retained) while knowledge is degrading (MMLU 59.6 → 36.0, 60%); deepen to 32% (adding depth deletion) and MMLU too collapses to near chance (→ 23) and gsm8k to ~1. Stratifying the eval into surface/completion vs. reasoning/knowledge tasks exposes a **capability crater** that the aggregate hides.
 
-We then localize the loss and test candidate explanations. **In the tested shapes, GSM8K degrades under both residual-width and depth cuts:** continuously with width (gsm8k roughly halves every 64 residual channels removed) and faster with depth removal. Putting an *uncut* model through the identical heal keeps gsm8k at 59.3, which argues against heal-induced forgetting alone as the cause (it does not isolate every surgery-by-heal interaction). At this budget, none of the tested residual reshapes (channel selection, rotation, low-rank capture) or heal objectives (pure-KD, math-data mix, MTP, focus) restored baseline gsm8k; the best, pure-KD with a math-data mix, reached 8.5 (from 4.2) against a 61.7 baseline. **None of the three tested allocations of a 21–30% cut** (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3% parameter reduction) preserved gsm8k; they are not matched in size, so they compare shapes only loosely. The loss is not explained by the answer-extraction and letter-bias effects we tested (§6.5): gsm8k is identical under strict and flexible extraction on 200 problems, the below-chance MMLU score is letter collapse over chance-level accuracy, and the tested linear probes do not recover teacher-like accuracy. Compression also degrades the model's *calibration* (§6.6): at 32% its MMLU confidence no longer separates right from wrong answers (AUROC 0.51), and a cascade whose escalation threshold targets staying within 1 point of the teacher on MMLU escalates 92–98% of holdout items, ending 0.8–1.1 points below the teacher.
+We then localize the loss and test candidate explanations. **In the tested shapes, GSM8K degrades under both residual-width and depth cuts:** continuously with width (gsm8k roughly halves every 64 residual channels removed), and a depth-only cut (28 → 21 layers) took it to zero. Putting an *uncut* model through the identical heal keeps gsm8k at 59.3, which argues against heal-induced forgetting alone as the cause (it does not isolate every surgery-by-heal interaction). At this budget, none of the tested residual reshapes (channel selection, rotation, low-rank capture) or heal objectives (pure-KD, math-data mix, MTP, focus) restored baseline gsm8k; the best, pure-KD with a math-data mix, reached 8.5 (from 4.2) against a 61.7 baseline. **None of the three tested allocations of a 21–30% cut** (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3% parameter reduction) preserved gsm8k; they are not matched in size, so they compare shapes only loosely. The loss is not explained by the answer-extraction and letter-bias effects we tested (§6.5): gsm8k is identical under strict and flexible extraction on 200 problems, the below-chance MMLU score is letter collapse over chance-level accuracy, and the tested linear probes do not recover teacher-like accuracy. Compression also degrades the model's *calibration* (§6.6): at 32% its MMLU confidence no longer separates right from wrong answers (AUROC 0.51), and a cascade whose escalation threshold targets staying within 1 point of the teacher on MMLU escalates 92–98% of holdout items, ending 0.8–1.1 points below the teacher.
 
 The practical consequence: an average over surface/completion tasks is not evidence that a compressed model retains reasoning or knowledge, so compression results should report those capabilities directly. In our tests at 1.5B, no tested shape kept gsm8k near baseline beyond small cuts (a ~4% width cut already drops it from 61.7 to 42.5); whether compressing a larger source model avoids this is an open hypothesis. Task-dependent collapse after layer removal has been reported before — ShortGPT ([Men et al., 2024](https://arxiv.org/abs/2403.03853), §4.6) shows near-zero GSM8K and HumanEval after removing 25% of layers — so the contribution here is not the discovery of the collapse but the cheap-heal controls, the residual-width versus depth comparison, and the confidence/cascade characterization in this setting.
 
@@ -105,16 +105,15 @@ Sweeping *only* residual width (keeping all 28 layers) maps a steep, **continuou
 
 gsm8k roughly **halves for every ~64 residual channels removed**. There is no "safe" plateau — the cost begins immediately (even a 4% width cut loses 31% of gsm8k). This is the signature of a **high-dimensional capability degrading as its dimensions are removed**, not an all-or-nothing bandwidth gate.
 
-### 5.2 Depth kills reasoning *too* — and faster
+### 5.2 Depth removal also drops GSM8K
 
 The earlier "width→math, depth→knowledge" split was **too clean**. Cutting depth at *full* width (28 → 21 layers, 1216.1M parameters, 21.2% reduction) took gsm8k to zero:
 
 | shape | params (reduction) | width | depth | gsm8k | MMLU |
 |---|---|---|---|---|---|
 | depth-only (7 layers removed) | 1216.1M (21.2%) | 1536 | 21 | **0.0** | 27.4 |
-| width-only at a similar size (interpolated from §5.1, not run) | ~1216M | ~1216 | 28 | ~6 | ~34 |
 
-At a similar parameter count, **depth removal was *more* damaging to gsm8k than the interpolated width-only point** in these runs. One possible reading is that multi-step arithmetic depends on sequential computation across layers, but these runs do not test that mechanism. *(captrade runs use eval_limit=200; the effect size (0 vs 60) dwarfs the sampling noise.)*
+No width-only run exists at a matching size (the §5.1 width sweep stops at width 1280), so these runs do not show whether depth or width removal is more damaging at matched parameters. *(captrade runs use eval_limit=200; the drop from the 61.7 baseline to 0 is far larger than the sampling noise.)*
 
 ### 5.3 The knowledge cliff
 
@@ -123,7 +122,7 @@ MMLU collapses specifically at depth deletion: width-only at 1280 holds MMLU 36.
 **Summary of the observed patterns** (Qwen2.5-1.5B, these shapes and this heal; not general laws):
 - **Surface tasks** held up under heavy compression on every tested axis.
 - **Knowledge (MMLU)** degraded with width and fell to chance at the depth-deletion step tested (28 → 25 layers).
-- **Reasoning (gsm8k)** degraded under every tested width and depth cut, fastest under depth.
+- **Reasoning (gsm8k)** degraded under every tested width and depth cut, reaching zero under a 7-layer depth-only cut.
 
 ---
 

@@ -198,6 +198,8 @@ The failure modes differ in kind: cp17 keeps the format and the solution structu
 
 Below-chance was letter collapse; underneath it, cp29's option likelihoods carry no usable MMLU signal (chance accuracy, uninformative ranking).
 
+**Which letter is setup-specific.** A later exploratory check used a five-shot subject prompt on 384 MMLU validation items. There cp29 favored **D (73%), not A**, with accuracy 24.7% against the teacher's 62.5%; cp17 scored 40.4% and again rarely predicted B (6%). The prompt and split both differ from the main evaluation, so this does not isolate a cause. It does mean "collapse onto one letter, near chance" is the finding, not "collapse onto A". See `results/mmlu_letter_setup_check.md`.
+
 **Objection 3: the knowledge is present but *inaccessible* to option scoring.** A frozen-feature linear probe (last-token hidden state at 50/75/100% depth, 4-way logistic regression, 5-fold CV grouped by subject, with a randomly initialized Qwen2.5-0.5B as a rough control for surface cues — note it is **not** shape-matched to cp29):
 
 | model | best probe acc (layer) | zero-shot MMLU |

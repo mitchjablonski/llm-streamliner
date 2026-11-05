@@ -244,7 +244,7 @@
 
       <div class="chain">
         <div class="step"><span class="lab">Format</span><span class="txt">gsm8k is <strong>identical</strong> under strict (<code>#### N</code>) and flexible (last number) extraction: teacher 61.5 / 61.5, 17% 4.0 / 4.0, 32% 1.5 / 1.5. The 17% model keeps the format and gets the arithmetic wrong.<div class="r">strict = flexible · 200 problems</div></span></div>
-        <div class="step"><span class="lab">Below&nbsp;chance</span><span class="txt">The 32% model answers <strong>"A" on 98%</strong> of MMLU items — its 23% is exactly the share of A answers. Removing the letter preference leaves <strong>25.1</strong>: chance.<div class="r">letter-debiased · holdout half · AUROC 0.51</div></span></div>
+        <div class="step"><span class="lab">Below&nbsp;chance</span><span class="txt">The 32% model answers <strong>"A" on 98%</strong> of MMLU items — its 23% is exactly the share of A answers. Removing the letter preference leaves <strong>25.1</strong>: chance. The favored letter depends on the setup: a later five-shot validation check favored D (73%), also near chance.<div class="r">letter-debiased · holdout half · AUROC 0.51</div></span></div>
         <div class="step"><span class="lab">Hidden?</span><span class="txt">A linear probe on frozen hidden states tracks zero-shot accuracy for every model; at 32% the tested probes reach <strong>27.8</strong> vs <strong>25.7</strong> for a random-init Qwen2.5-0.5B control (not shape-matched; ± values are fold spreads, not a significance test). They do not recover teacher-like accuracy; this is not proof of erasure.<div class="r">probe · teacher 55.0 · 17% 36.9 · 32% 27.8</div></span></div>
       </div>
 

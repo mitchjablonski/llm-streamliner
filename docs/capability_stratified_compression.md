@@ -2,7 +2,7 @@
 
 **Qwen2.5-1.5B, block-replacement compression + ~3M-token distillation heal (A10, June–July 2026)**
 
-> **Correction (2026-11-05).** Earlier versions described the heal as ~30M tokens. The recipe loads a 30M-token C4 buffer (`--heal_tokens 30000000`), but the optimizer sees 4,000 steps × batch 2 × sequence length 384 = 3,072,000 token positions, read in order from the start of that buffer. Every measured result is unchanged; only the token count was misstated, and the heal was about 10× cheaper than reported. Runs labelled 10M/100M used 1,340 and 13,000 steps, so they optimized about 1.0M and 10.0M tokens.
+> **Correction (2026-11-05).** Earlier versions described the heal as ~30M tokens. The recipe loads a 30M-token C4 buffer (`--heal_tokens 30000000`), but the optimizer sees 4,000 steps × batch 2 × sequence length 384 = 3,072,000 token positions, read in order from the start of that buffer. Every measured result and the reported GPU time are unchanged; only the token count was misstated: the optimized positions are one tenth of the figure previously stated. Runs labelled 10M/100M used 1,340 and 13,000 steps, so they optimized about 1.0M and 10.0M tokens.
 
 ---
 

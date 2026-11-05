@@ -1,12 +1,14 @@
 # Capability-Stratified Compression: What Cheap LLM Compression Silently Destroys
 
-**Qwen2.5-1.5B, block-replacement compression + ~30M-token distillation heal (A10, June–July 2026)**
+**Qwen2.5-1.5B, block-replacement compression + ~3M-token distillation heal (A10, June–July 2026)**
+
+> **Correction (2026-11-05).** Earlier versions described the heal as ~30M tokens. The recipe loads a 30M-token C4 buffer (`--heal_tokens 30000000`), but the optimizer sees 4,000 steps × batch 2 × sequence length 384 = 3,072,000 token positions, read in order from the start of that buffer. Every measured result and the reported GPU time are unchanged; only the token count was misstated: the optimized positions are one tenth of the figure previously stated. Runs labelled 10M/100M used 1,340 and 13,000 steps, so they optimized about 1.0M and 10.0M tokens.
 
 ---
 
 ## Abstract
 
-Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~30M-token) distillation heal — recovers **88% of the 8-task surface/completion benchmark average at 17% compression** and looks strong by the usual aggregate "retention %" metric. "Benchmark average" here is the mean over `{lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa}` (teacher 68.4 → 60.4 = 88.3%) — a basket of the kind structured-compression papers commonly report. **This eight-task average does not establish GSM8K or MMLU retention.** At the *same* 17% cut, multi-step math has already *collapsed* (gsm8k 61.7 → 3.6, 6% retained) while knowledge is degrading (MMLU 59.6 → 36.0, 60%); deepen to 32% (adding depth deletion) and MMLU too collapses to near chance (→ 23) and gsm8k to ~1. Stratifying the eval into surface/completion vs. reasoning/knowledge tasks exposes a **capability crater** that the aggregate hides.
+Cheap structured compression of a 1.5B language model — layer/width surgery followed by a small (~3M-token) distillation heal — recovers **88% of the 8-task surface/completion benchmark average at 17% compression** and looks strong by the usual aggregate "retention %" metric. "Benchmark average" here is the mean over `{lambada, hellaswag, arc_easy, piqa, winogrande, boolq, sciq, openbookqa}` (teacher 68.4 → 60.4 = 88.3%) — a basket of the kind structured-compression papers commonly report. **This eight-task average does not establish GSM8K or MMLU retention.** At the *same* 17% cut, multi-step math has already *collapsed* (gsm8k 61.7 → 3.6, 6% retained) while knowledge is degrading (MMLU 59.6 → 36.0, 60%); deepen to 32% (adding depth deletion) and MMLU too collapses to near chance (→ 23) and gsm8k to ~1. Stratifying the eval into surface/completion vs. reasoning/knowledge tasks exposes a **capability crater** that the aggregate hides.
 
 We then localize the loss and test candidate explanations. **In the tested shapes, GSM8K degrades under both residual-width and depth cuts:** continuously with width (gsm8k roughly halves every 64 residual channels removed), and a depth-only cut (28 → 21 layers) took it to zero. Putting an *uncut* model through the identical heal keeps gsm8k at 59.3, which argues against heal-induced forgetting alone as the cause (it does not isolate every surgery-by-heal interaction). At this budget, none of the tested residual reshapes (channel selection, rotation, low-rank capture) or heal objectives (pure-KD, math-data mix, MTP, focus) restored baseline gsm8k; the best, pure-KD with a math-data mix, reached 8.5 (from 4.2) against a 61.7 baseline. **None of the three tested allocations of a 21–30% cut** (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3% parameter reduction) preserved gsm8k; they are not matched in size, so they compare shapes only loosely. The loss is not explained by the answer-extraction and letter-bias effects we tested (§6.5): gsm8k is identical under strict and flexible extraction on 200 problems, the below-chance MMLU score is letter collapse over chance-level accuracy, and the tested linear probes do not recover teacher-like accuracy. Compression also degrades the model's *calibration* (§6.6): at 32% its MMLU confidence no longer separates right from wrong answers (AUROC 0.51), and a cascade whose escalation threshold targets staying within 1 point of the teacher on MMLU escalates 92–98% of holdout items, ending 0.8–1.1 points below the teacher.
 
@@ -18,7 +20,7 @@ The practical consequence: an average over surface/completion tasks is not evide
 
 - **Base model:** Qwen2.5-1.5B (28 layers, hidden 1536, 1543.7M params). Teacher for the heal and the retention denominator.
 - **Compression:** block-replacement surgery — clean layer deletion, residual-width pruning by activation energy, attention/FFN internal-dim reshaping, optional ReplaceMe-style closed-form splice. The unbeaten default is **keep-full**: keep attention/FFN internal dims full, narrow the residual width, delete depth cleanly.
-- **Heal:** ~30M tokens, C4, loss `0.5·CE + 0.5·logit-KD(parent)`, ~4000 steps, lr 3e-5. Deliberately **cheap** — the research goal is few/zero-shot-preserving compression, so gains must come from the *operator and distillation quality*, not token volume.
+- **Heal:** ~3.07M tokens optimized (4,000 steps × batch 2 × sequence length 384), drawn in order from the start of a 30M-token C4 buffer, loss `0.5·CE + 0.5·logit-KD(parent)`, ~4000 steps, lr 3e-5. Deliberately **cheap** — the research goal is few/zero-shot-preserving compression, so gains must come from the *operator and distillation quality*, not token volume.
 - **Evaluation — the dual basket:**
   - **Surface/completion (easy):** lambada, hellaswag, arc-easy, piqa, winogrande, boolq, sciq, openbookqa
   - **Reasoning/knowledge (hard):** gsm8k (5-shot generative), MMLU, arc-challenge
@@ -60,8 +62,8 @@ We measured ReplaceMe's method *in our own harness* on Llama-3.2-1B (25.4% compr
 |---|---|---|
 | ReplaceMe surgery, training-free | 0 tokens | **52.3%** |
 | + instruction-calibrated splice | 0 tokens | 57.4% |
-| ReplaceMe surgery **+ our 30M heal** | 30M | **73.5%** |
-| our surgery, matched shape (w1920_d6) | 30M | 73.3% |
+| ReplaceMe surgery **+ our ~3M heal** | ~3M | **73.5%** |
+| our surgery, matched shape (w1920_d6) | ~3M | 73.3% |
 
 **The heal is the dominant factor (+16–21 points); the surgery choice is worth ~2.** The honest claim is therefore an *exchange rate* — "≈3 GPU-hours of cheap heal buys +16 over training-free" — not a same-budget knockout. (Note: a widely-cited "ReplaceMe Llama-3.2-1B @25% = 87.7%" figure is **not in the paper** — their smallest evaluated model is Llama-2-7B. Small-model bars must be measured, not cited.)
 
@@ -85,7 +87,7 @@ Take a compressed model at **17% compression** (residual width 1280, keep-full, 
 
 This is the case study's core claim: **in this setting, cheap structured compression is capability-stratified, and an eight-task surface average does not reveal the reasoning loss.**
 
-**Relation to prior work.** Task-dependent collapse under layer removal is not new. ShortGPT ([Men et al., 2024](https://arxiv.org/abs/2403.03853)) reports near-zero GSM8K and HumanEval after removing 25% of layers (§4.6) and discusses sharp MMLU drops (§4.3). What this case study adds is (i) controls for the cheap ~30M-token heal (healing an uncut model; reshape, objective and data variants), (ii) a residual-width versus depth comparison at matched compression, and (iii) measurement checks and a confidence/cascade characterization of the compressed models. A fuller related-work survey is still owed.
+**Relation to prior work.** Task-dependent collapse under layer removal is not new. ShortGPT ([Men et al., 2024](https://arxiv.org/abs/2403.03853)) reports near-zero GSM8K and HumanEval after removing 25% of layers (§4.6) and discusses sharp MMLU drops (§4.3). What this case study adds is (i) controls for the cheap ~3M-token heal (healing an uncut model; reshape, objective and data variants), (ii) a residual-width versus depth comparison at matched compression, and (iii) measurement checks and a confidence/cascade characterization of the compressed models. A fuller related-work survey is still owed.
 
 ---
 
@@ -130,11 +132,11 @@ MMLU collapses specifically at depth deletion: width-only at 1280 holds MMLU 36.
 
 ### 6.1 Healing an uncut model (`forget` control)
 
-Put an **uncut** teacher through the *identical* 30M-token heal:
+Put an **uncut** teacher through the *identical* ~3M-token heal:
 
 | model | gsm8k | MMLU | arc-c |
 |---|---|---|---|
-| uncut + 30M heal | **59.3** | 59.5 | 44.3 |
+| uncut + ~3M heal | **59.3** | 59.5 | 44.3 |
 | teacher (reference) | 61.7 | 59.6 | 45.1 |
 
 The heal costs ~2 points of math on an intact model. This argues against heal-induced forgetting **alone** as the cause of the collapse. It does not isolate every surgery-by-heal interaction: in §6.2–6.4 the heal acts on a cut model, which an uncut control cannot fully stand in for.
@@ -211,7 +213,7 @@ Below-chance was letter collapse; underneath it, cp29's option likelihoods carry
 
 For every model the probe tracks zero-shot accuracy, and the tested probes **do not recover teacher-like accuracy** from cp29: 27.8 ± 1.1 vs 25.7 ± 0.6 for the control, where ± is the spread across subject-grouped folds, not a significance test of the difference. We therefore claim neither erasure (a nonlinear readout could find more) nor a statistically resolved residual signal.
 
-**Verdict.** Within this scope — Qwen2.5-1.5B, this surgery and ~30M-token heal budget, these tasks — the loss is not explained by the tested answer-extraction and letter-bias effects; the strict/flexible comparison covers 200 problems.
+**Verdict.** Within this scope — Qwen2.5-1.5B, this surgery and ~3M-token heal budget, these tasks — the loss is not explained by the tested answer-extraction and letter-bias effects; the strict/flexible comparison covers 200 problems.
 
 ### 6.6 A second metric warning: calibration degrades with compression
 
@@ -235,7 +237,7 @@ A large operator and distillation search — **~70 distinct levers across 82 exp
 
 - **Reshape / capture (all fail):** whitened/output-aware SVD, hybrid-capture, ghost-capture, orthogonal add-channels (Schur), CUR, SliceGPT rotation, closed-form fold/absorption, EoRA.
 - **Structural (all fail):** layer-merge (LaCo), layer-tie (MobileLLM weight sharing), full-width bus (per-layer read/write index sets — routing incoherence), FFN→depth reallocation (Net2DeeperNet + lstsq), embedding factorization, canon conv-mixers (net-new token mixing).
-- **Distillation (all ≈ vanilla at 30M tokens):** reverse-KL / JSD / DKD / GKD, feature/relation/attention distillation, focus weighting, MTP and MTP-KD, hard-example mining, longer context; **data** (C4 > teacher-generated > instruction/SlimOrca > math-mix); **teacher** (parent > big-teacher, monotonically worse).
+- **Distillation (all ≈ vanilla at the standard ~3M-token budget):** reverse-KL / JSD / DKD / GKD, feature/relation/attention distillation, focus weighting, MTP and MTP-KD, hard-example mining, longer context; **data** (C4 > teacher-generated > instruction/SlimOrca > math-mix); **teacher** (parent > big-teacher, monotonically worse).
 
 The consolidated design principles ("three-clause law"): (1) don't modify pretrained weights (fold/merge fail); (2) don't constrain them to new roles (tie fails); (3) don't break residual-stream global coherence (bus fails). FFN units behave as key-value memories (raw cuts destroy knowledge). The heal is an information-bound, ~4%-norm **dense** polish (per-matrix SVD of healed−surgical: median r90/dim ≈ 0.76) — closing the "learned/amortized healing operator" bet at the weight level.
 
@@ -268,7 +270,7 @@ So the scaling evidence is a **caution, not a promise**, for the source-scale hy
 ## 10. Limitations
 
 - Single family (Qwen2.5) at a single scale (1.5B). Cross-family confirmation of the crater (SmolLM2/TinyLlama, hard basket) is the recommended next check to promote the finding from "Qwen fact" to "transformer fact."
-- Heal fixed at ~30M tokens by design (few/zero-shot regime). We do **not** claim reasoning is unrecoverable with large-scale retraining — only that it is unrecoverable *cheaply*, which is the regime of interest.
+- Heal fixed at ~3M tokens by design (few/zero-shot regime). We do **not** claim reasoning is unrecoverable with large-scale retraining — only that it is unrecoverable *cheaply*, which is the regime of interest.
 - gsm8k measured 5-shot generative; the reasoning-collapse conclusion is robust to the sampling limit because the effect (60→0) is an order of magnitude larger than the noise. The §6.5 strict/flexible re-score uses 200 problems.
 - The linear probe (§6.5) bounds *linearly* accessible knowledge only; it does not establish erasure, and its random-init control is not shape-matched to the probed checkpoint.
 - Related work: task-dependent collapse under layer removal was reported by ShortGPT (§4.6); a fuller survey of capability-stratified compression evaluations is still owed. The calibration results (§6.6) are measured on MMLU, BoolQ, ARC and PIQA for the two rebuilt checkpoints; the cascade figures are for MMLU at a within-1-point target.
@@ -311,7 +313,7 @@ question, not the frontier question. Each row traces to a `results/a10_<lever>_s
 |---|---|---|---|
 | outraw | raw activation-energy width prune (+sink-pin) — **the baseline** | 88.5% | BASELINE (sink-pin adds nothing) |
 | capture | capture-basis variants (rrr/ortho/wanda/combine/pls) | combine 88.4% | TIED |
-| refit | extra heal tokens on capture (10M/100M) | 88.8% | TIED (just more data) |
+| refit | extra heal tokens on capture (~1M/~10M optimized; 10M/100M buffers) | 88.8% | TIED (just more data) |
 | combosolver | joint OSAL/SAL closed-form solver | 87.2% | LOST |
 | eorapush / svdcap | push EoRA / SVD-basis capture rank | 85.4 / 81.1% | LOST |
 | head / head2 | GQA query-head prune (wanda>energy>norm criterion) | 87.0% | LOST |

@@ -10,7 +10,7 @@ Here "benchmark average" means the mean over the **8 surface/completion tasks** 
 
 ## The finding in one table
 
-A compressed model at **17% compression** (Qwen2.5-1.5B, residual width 1280, keep-full block-replacement + 30M-token distillation heal), evaluated task-by-task against its teacher (5-shot GSM8K; `acc`/`acc_norm` per lm-eval defaults):
+A compressed model at **17% compression** (Qwen2.5-1.5B, residual width 1280, keep-full block-replacement + ~3M-token distillation heal), evaluated task-by-task against its teacher (5-shot GSM8K; `acc`/`acc_norm` per lm-eval defaults):
 
 | task | kind | teacher | compressed | retained |
 |---|---|--:|--:|--:|
@@ -34,7 +34,7 @@ The 88% headline is the surface-mean row. One aggregate "retention %" averages a
 
 ## Method
 
-`keep-full` block-replacement compression: keep attention/FFN internal dims full, prune residual-stream **width** by activation energy, delete depth cleanly, optional ReplaceMe-style closed-form splice. Then a **cheap** heal — ~30M tokens, `0.5·CE + 0.5·logit-KD(parent)`. Everything lives in [`src/`](src/) (`arch.py` is the operator zoo); [`scripts/run_generative.py`](scripts/run_generative.py) is the entry point with every lever as a flag.
+`keep-full` block-replacement compression: keep attention/FFN internal dims full, prune residual-stream **width** by activation energy, delete depth cleanly, optional ReplaceMe-style closed-form splice. Then a **cheap** heal — ~3M tokens optimized (4,000 steps × 2 × 384, from a 30M-token C4 buffer), `0.5·CE + 0.5·logit-KD(parent)`. Everything lives in [`src/`](src/) (`arch.py` is the operator zoo); [`scripts/run_generative.py`](scripts/run_generative.py) is the entry point with every lever as a flag.
 
 ## Research arc
 
@@ -90,7 +90,7 @@ The write-up also includes a **source-scale section** (§8: compressibility rise
 
 ## Scope & limitations
 
-Single model family (Qwen2.5) at a single scale (1.5B). The heal is fixed at ~30M tokens *by design* (the regime of interest is cheap, few/zero-shot-preserving compression) — we do **not** claim reasoning is unrecoverable with large-scale retraining, only that the tested cheap controls did not recover it. gsm8k is 5-shot generative; the reasoning-collapse conclusion is robust to the sampling limit because the effect (60→0) dwarfs the noise. Cross-family confirmation and a larger-source (3B→1.5B) run are the open follow-ups, and a fuller related-work survey is owed.
+Single model family (Qwen2.5) at a single scale (1.5B). The heal is fixed at ~3M tokens *by design* (the regime of interest is cheap, few/zero-shot-preserving compression) — we do **not** claim reasoning is unrecoverable with large-scale retraining, only that the tested cheap controls did not recover it. gsm8k is 5-shot generative; the reasoning-collapse conclusion is robust to the sampling limit because the effect (60→0) dwarfs the noise. Cross-family confirmation and a larger-source (3B→1.5B) run are the open follow-ups, and a fuller related-work survey is owed.
 
 ## License
 

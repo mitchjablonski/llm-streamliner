@@ -123,7 +123,7 @@
 
   <header class="hero">
     <div class="col">
-      <div class="eyebrow">Empirical findings · Qwen2.5-1.5B · block-replacement + 30M-token heal</div>
+      <div class="eyebrow">Empirical findings · Qwen2.5-1.5B · block-replacement + ~3M-token heal</div>
       <h1>The retention number is telling you the truth about the wrong thing.</h1>
       <p class="dek">At 17% compression it keeps 88% of the <strong>surface/completion</strong> benchmark average — a basket of the kind compression papers commonly report — while its GSM8K math score has already collapsed.</p>
 
@@ -151,7 +151,7 @@
   <div class="col">
 
     <section>
-      <p class="lead">We compress a 1.5B language model with the standard cheap recipe — layer/width surgery plus a small (~30&nbsp;million-token) distillation heal — and it scores well by the usual measure. Then we split the benchmark into <strong>surface/completion</strong> tasks and <strong>reasoning/knowledge</strong> tasks. The aggregate hides a crater: surface competence survives while GSM8K and MMLU collapse. This case study localizes the loss across residual width and depth, tests candidate explanations (heal-induced forgetting, basis, heal objective, shape), and characterizes what the compressed models' confidence still tells you. Task-dependent collapse after layer removal was reported earlier — <a href="https://arxiv.org/abs/2403.03853">ShortGPT</a> (§4.6) shows near-zero GSM8K after removing 25% of layers — so the contribution here is the cheap-heal controls, the width/depth comparison and the confidence characterization, scoped to Qwen2.5-1.5B and this ~30M-token heal.</p>
+      <p class="lead">We compress a 1.5B language model with the standard cheap recipe — layer/width surgery plus a small (~3&nbsp;million-token) distillation heal — and it scores well by the usual measure. Then we split the benchmark into <strong>surface/completion</strong> tasks and <strong>reasoning/knowledge</strong> tasks. The aggregate hides a crater: surface competence survives while GSM8K and MMLU collapse. This case study localizes the loss across residual width and depth, tests candidate explanations (heal-induced forgetting, basis, heal objective, shape), and characterizes what the compressed models' confidence still tells you. Task-dependent collapse after layer removal was reported earlier — <a href="https://arxiv.org/abs/2403.03853">ShortGPT</a> (§4.6) shows near-zero GSM8K after removing 25% of layers — so the contribution here is the cheap-heal controls, the width/depth comparison and the confidence characterization, scoped to Qwen2.5-1.5B and this ~3M-token heal (3.07M optimized positions from a 30M-token buffer).</p>
     </section>
 
     <section>
@@ -209,10 +209,10 @@
     <section>
       <div class="kicker"><span class="mk">03</span><div class="eyebrow">Testing explanations</div></div>
       <h2>None of the tested cheap fixes restored it</h2>
-      <p>Four controls, each testing one explanation at this ~30M-token budget: heal-induced forgetting, the choice of basis, the heal objective, and the shape of the cut.</p>
+      <p>Four controls, each testing one explanation at this ~3M-token budget: heal-induced forgetting, the choice of basis, the heal objective, and the shape of the cut.</p>
 
       <div class="chain">
-        <div class="step"><span class="lab">Uncut&nbsp;heal</span><span class="txt">An <strong>uncut</strong> model put through the identical 30M-token heal keeps gsm8k <strong>59.3</strong> (teacher 61.7). This argues against heal-induced forgetting <em>alone</em>; it does not isolate every surgery-by-heal interaction.<div class="r">forget · uncut+heal · gsm8k 59.3</div></span></div>
+        <div class="step"><span class="lab">Uncut&nbsp;heal</span><span class="txt">An <strong>uncut</strong> model put through the identical ~3M-token heal keeps gsm8k <strong>59.3</strong> (teacher 61.7). This argues against heal-induced forgetting <em>alone</em>; it does not isolate every surgery-by-heal interaction.<div class="r">forget · uncut+heal · gsm8k 59.3</div></span></div>
         <div class="step"><span class="lab">Basis&nbsp;fails</span><span class="txt">Every residual reshape at 17% — channel-protection, SliceGPT rotation, low-rank capture — lands gsm8k at <strong>2–4</strong>. A different basis did not help in these tests.<div class="r">reshape · protect 3.3 / rotate 2.3 / capture 3.0</div></span></div>
         <div class="step"><span class="lab">Heal&nbsp;fails</span><span class="txt">Pure distillation toward the intact parent (the textbook forgetting fix) reaches <strong>4.2</strong>, or <strong>8.5</strong> with a math-data mix — an improvement, far from the 61.7 baseline.<div class="r">recover · pure-KD 4.2 · +math 8.5</div></span></div>
         <div class="step"><span class="lab">Shape&nbsp;fails</span><span class="txt">Three allocations of a 21–30% cut (depth-only 21.2%, narrow-deep 25.0%, wide-shallow 30.3%; not size-matched) all land at <strong>0–1</strong>.<div class="r">captrade · 0.0 / 1.0 / 0.0</div></span></div>
@@ -240,7 +240,7 @@
     <section>
       <div class="kicker"><span class="mk">05</span><div class="eyebrow">Measurement checks</div></div>
       <h2>Not explained by the tested scoring effects</h2>
-      <p>A collapse this large invites measurement objections. We rebuilt the 17% and 32% checkpoints with the identical recipe (reproducing the originals: cp29 MMLU 22.99 vs 23.0) and re-scored them with per-sample logging. Scope: Qwen2.5-1.5B, this surgery and ~30M-token heal, these tasks.</p>
+      <p>A collapse this large invites measurement objections. We rebuilt the 17% and 32% checkpoints with the identical recipe (reproducing the originals: cp29 MMLU 22.99 vs 23.0) and re-scored them with per-sample logging. Scope: Qwen2.5-1.5B, this surgery and ~3M-token heal, these tasks.</p>
 
       <div class="chain">
         <div class="step"><span class="lab">Format</span><span class="txt">gsm8k is <strong>identical</strong> under strict (<code>#### N</code>) and flexible (last number) extraction: teacher 61.5 / 61.5, 17% 4.0 / 4.0, 32% 1.5 / 1.5. The 17% model keeps the format and gets the arithmetic wrong.<div class="r">strict = flexible · 200 problems</div></span></div>
@@ -281,7 +281,7 @@
     <footer>
       <p class="prov">
         MODEL &nbsp;Qwen2.5-1.5B · 28L · hidden 1536 · 1543.7M<br>
-        HEAL &nbsp;~30M tokens C4 · 0.5·CE + 0.5·logit-KD(parent) · fixed cheap budget<br>
+        HEAL &nbsp;~3M tokens C4 (30M buffer) · 0.5·CE + 0.5·logit-KD(parent) · fixed cheap budget<br>
         EVAL &nbsp;lm-eval-harness · surface {lambada, hellaswag, arc-e, piqa, winogrande, boolq, sciq, openbookqa} · hard {gsm8k 5-shot, MMLU, arc-c}<br>
         DATA &nbsp;82 run summaries in results/ · every number traced to a run summary<br>
         CHECKS &nbsp;Sep 2026 rebuild of cp17/cp29 · results/a10_calib_summary.txt, results/calib_summary_v2.md (strict/flexible, letter bias, calibration, cascade) · probe: results/a10_probe_summary.txt<br>

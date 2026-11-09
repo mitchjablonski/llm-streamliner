@@ -222,8 +222,8 @@
     </section>
 
     <section>
-      <div class="kicker"><span class="mk">04</span><div class="eyebrow">No shape escapes</div></div>
-      <h2>Reallocating the cut doesn't help</h2>
+      <div class="kicker"><span class="mk">04</span><div class="eyebrow">No tested shape escapes</div></div>
+      <h2>Reallocating the cut did not help here</h2>
       <p>The three allocations differ in size (21.2%, 25.0% and 30.3% parameter reduction), and narrow-deep's 1.0 versus 0.0 is 2 versus 0 correct of 200 problems. None of these three shapes preserved GSM8K. These runs establish neither an architectural mechanism nor that compression in general cannot preserve it.</p>
       <div class="tbl-wrap">
         <table>
@@ -243,10 +243,12 @@
       <p>A collapse this large invites measurement objections. We rebuilt the 17% and 32% checkpoints with the identical recipe (reproducing the originals: cp29 MMLU 22.99 vs 23.0) and re-scored them with per-sample logging. Scope: Qwen2.5-1.5B, this surgery and ~3M-token heal, these tasks.</p>
 
       <div class="chain">
-        <div class="step"><span class="lab">Format</span><span class="txt">gsm8k is <strong>identical</strong> under strict (<code>#### N</code>) and flexible (last number) extraction: teacher 61.5 / 61.5, 17% 4.0 / 4.0, 32% 1.5 / 1.5. The 17% model keeps the format and gets the arithmetic wrong.<div class="r">strict = flexible · 200 problems</div></span></div>
+        <div class="step"><span class="lab">Format</span><span class="txt">gsm8k is <strong>identical</strong> under strict (<code>#### N</code>) and flexible (last number) extraction: teacher 61.5 / 61.5, 17% 4.0 / 4.0, 32% 1.5 / 1.5. The 17% model keeps the format and gets the arithmetic wrong. Specific to these checkpoints and lm-eval's stop sequences and filters; see the protocol caveat below.<div class="r">strict = flexible · 200 problems · lm-eval filters</div></span></div>
         <div class="step"><span class="lab">Below&nbsp;chance</span><span class="txt">The 32% model answers <strong>"A" on 98%</strong> of MMLU items — its 23% is exactly the share of A answers. Removing the letter preference leaves <strong>25.1</strong>: chance. The favored letter depends on the setup: a later five-shot validation check favored D (73%), also near chance.<div class="r">letter-debiased · holdout half · AUROC 0.51</div></span></div>
         <div class="step"><span class="lab">Hidden?</span><span class="txt">A linear probe on frozen hidden states tracks zero-shot accuracy for every model; at 32% the tested probes reach <strong>27.8</strong> vs <strong>25.7</strong> for a random-init Qwen2.5-0.5B control (not shape-matched; ± values are fold spreads, not a significance test). They do not recover teacher-like accuracy; this is not proof of erasure.<div class="r">probe · teacher 55.0 · 17% 36.9 · 32% 27.8</div></span></div>
       </div>
+
+      <p><strong>Protocol caveat (2026-11-07).</strong> The strict/flexible agreement above holds for these checkpoints under lm-eval's task definitions, which supply the generation stop sequences and both extraction filters. A later, separate evaluation path used in a follow-up pilot (custom fixed-shot prompts, greedy decoding to end-of-sequence or a token cap, first-<code>#### n</code> strict and last-number flexible extraction, no explicit answer-boundary stop) showed the two readings diverging sharply, including for an unmodified parent model. Missing answer-boundary stopping and over-generation past the answer are plausible contributors, but raw generations were not retained and cap truncation alone does not account for the disagreement. Strict extraction served there as a sensitivity check, not a validated gold standard. This does not retract the lm-eval results above; it means generation stopping, extraction, cap-hit rates and parent-model filter agreement must be revalidated for every new evaluation protocol.</p>
 
       <h3>And the model stops knowing what it got wrong</h3>
       <p>If a compressed model's confidence still separated right from wrong answers, hard inputs could be escalated back to the parent. On MMLU, that signal degrades with compression and is near-gone at the deeper cut:</p>
@@ -275,7 +277,9 @@
       <h3>In our tests, no shape preserved GSM8K beyond small cuts</h3>
       <p>A ~4% residual-width cut already drops GSM8K from 61.7 to 42.5; three allocations of a 21–30% cut all land at 0–1, and no tested operator or heal objective at this budget restored it. We do not claim a general maximum compression ratio: the tolerable loss depends on the application.</p>
       <h3>Open hypothesis: source scale</h3>
-      <p>Native-1.5B (width 1536, 28 layers) reasons fine, so that geometry can support the capability when trained directly. Whether compressing a <strong>bigger source</strong> (3B → 1.5B) preserves more of it is an untested hypothesis; it would hold only if the thresholds are absolute rather than relative to the source.</p>
+      <p>Native-1.5B (width 1536, 28 layers) reasons fine, so that geometry can support the capability when trained directly. Whether compressing a <strong>bigger source</strong> (3B → 1.5B) preserves more of it is an untested hypothesis; it would hold only if the thresholds are absolute rather than relative to the source. A negative result there would bound this recipe at that scale, not confirm a general wall.</p>
+      <h3>Follow-up status (2026-11-07)</h3>
+      <p>Later bounded follow-ups on Qwen2.5-1.5B — closed-form and selection-based repairs at a shallow (~4%) residual-width cut, checked against a sealed held-out set — did not establish a robust recovery recipe: gains seen on development items were not confirmed on held-out items. A separate matched relative-width pilot applied the same shallow cut to Qwen2.5-1.5B and Qwen2.5-3B, each scored against its own parent, under a custom (non-lm-eval) generative evaluation. It did not establish a scale effect: its evaluation path exposed sensitivity to generation stopping and answer extraction (§05), and the two checkpoints differ in depth, heads, FFN width and training, so it is not a pure size comparison. It did not compress a 3B model to 1.5B size; a full 3B → 1.5B compression endpoint remains a different, untested question here. These measurements cover the stated checkpoints, healing budget and evaluation harness; they do not establish a universal limit on reasoning-preserving compression.</p>
     </section>
 
     <footer>
@@ -285,7 +289,7 @@
         EVAL &nbsp;lm-eval-harness · surface {lambada, hellaswag, arc-e, piqa, winogrande, boolq, sciq, openbookqa} · hard {gsm8k 5-shot, MMLU, arc-c}<br>
         DATA &nbsp;82 run summaries in results/ · every number traced to a run summary<br>
         CHECKS &nbsp;Sep 2026 rebuild of cp17/cp29 · results/a10_calib_summary.txt, results/calib_summary_v2.md (strict/flexible, letter bias, calibration, cascade) · probe: results/a10_probe_summary.txt<br>
-        SCOPE &nbsp;single family / single scale · cross-family crater check &amp; 3B→1.5B are the open follow-ups
+        SCOPE &nbsp;single family / single scale · stated checkpoints, heal budget and harness, not a universal limit · cross-family crater check &amp; a full 3B→1.5B compression remain untested (follow-up status 2026-11-07, §06)
       </p>
     </footer>
 
